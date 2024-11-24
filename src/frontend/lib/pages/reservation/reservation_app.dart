@@ -25,12 +25,20 @@ class _ReservationAppState extends State<ReservationApp> {
       {"service": "Barba a macchinetta", "price": "20€", "duration": "30 min"},
       {"service": "Taglio + barba disegnata", "price": "20€", "duration": "1h"},
       {"service": "Rasatura totale B+C", "price": "20€", "duration": "1h"},
-    ];;
+    ];
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text("I Barbieri Lissone"),
+        title: const Row(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: FaIcon(FontAwesomeIcons.scissors),
+            ),
+            Text("I Barbieri Lissone")
+          ],
+        ),
         centerTitle: false,
         automaticallyImplyLeading: false,
         actions: [
@@ -41,30 +49,15 @@ class _ReservationAppState extends State<ReservationApp> {
             icon: Theme.of(context).colorScheme.brightness == Brightness.light ?
               const Icon(Icons.sunny) : const Icon(Icons.nightlight_outlined),
           ),
-          const Padding(
-            padding: EdgeInsets.only(right: 20.0),
-            child: FaIcon(FontAwesomeIcons.scissors),
-          )
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
+          child: ListView(
             children: [
-              Panel(
-                child: Align(
-                  child: Text(
-                    "Servizi",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold
-                    ),
-                  ),
-                ),
-              ),
+              serviceContent(),
               const SizedBox(height: 15.0),
               Expanded(
                 child: LayoutBuilder(
@@ -95,12 +88,12 @@ class _ReservationAppState extends State<ReservationApp> {
                               textAlign: TextAlign.center,
                             ),
                             Text(
-                              services[index]['price'],
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold
-                              )
+                                services[index]['price'],
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold
+                                )
                             ),
                             Text(
                               services[index]['duration'],
@@ -112,8 +105,23 @@ class _ReservationAppState extends State<ReservationApp> {
                     );
                   },
                 ),
-              ),
+              )
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget serviceContent() {
+    return Panel(
+      child: Align(
+        child: Text(
+          "Servizi",
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
+            fontSize: 18,
+            fontWeight: FontWeight.bold
           ),
         ),
       ),
