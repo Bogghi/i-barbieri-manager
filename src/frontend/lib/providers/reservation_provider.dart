@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 
 class ReservationProvider extends ChangeNotifier {
-  int service;
+  int _service = -1;
 
-  ReservationProvider({
-    this.service = 0,
-  });
+  ReservationProvider();
+
+  int getServiceSelected() {
+    return _service;
+  }
+  void setService(int service) {
+    _service = service;
+    notifyListeners();
+  }
 }

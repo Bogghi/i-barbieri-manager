@@ -39,7 +39,6 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     final brightness = context.watch<SettingsProvider>().getMode();
-    print(brightness);
 
     TextTheme textTheme = createTextTheme(context, "Abel", "ABeeZee");
     MaterialTheme theme = MaterialTheme(textTheme);
