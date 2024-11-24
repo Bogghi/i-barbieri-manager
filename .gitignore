@@ -9,6 +9,7 @@
 /src/frontend/.history
 /src/frontend/.svn
 /src/frontend/migrate_working_dir
+/src/frontend/build
 
 # IntelliJ related
 /src/frontend/*.iml
