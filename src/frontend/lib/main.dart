@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fronend/providers/reservation_provider.dart';
 import 'package:provider/provider.dart';
+
+import 'package:frontend/providers/reservation_provider.dart';
+
+import 'package:frontend/pages/reservation/reservation_app.dart';
 
 void main() {
   runApp(const App());
@@ -20,10 +23,11 @@ class App extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Barber manager',
-        initialRoute: '/',
+        // Temporary set to reservation to work on that specific ui section
+        initialRoute: '/reservation',
         routes: {
           '/': (context) => const Center(child: Text("this is the index page"),),
-          '/reservation': (context) => const Center(child: Text('I want to make a reservation'))
+          '/reservation': (context) => const ReservationApp()
         },
       )
     );
