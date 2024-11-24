@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   provider: ^6.1.2
   font_awesome_flutter: ^10.8.0
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +82,9 @@ flutter:
    - family: FontAwesome
      fonts:
        - asset: assets/fonts/fa-solid-900.ttf
+       - asset: assets/fonts/ABeeZee-Regular.ttf
+       - asset: assets/fonts/ABeeZee-Italic.ttf
+       - asset: assets/fonts/Abel-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
