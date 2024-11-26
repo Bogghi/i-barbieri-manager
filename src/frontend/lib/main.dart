@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/providers/services_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:frontend/providers/reservation_provider.dart';
@@ -21,21 +22,16 @@ class ProviderApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(create: (context) => ReservationProvider()),
           ChangeNotifierProvider(create: (context) => SettingsProvider()),
+          ChangeNotifierProvider(create: (context) => ServicesProvider()),
         ],
         child: const App()
     );
   }
 }
 
-
-class App extends StatefulWidget {
+class App extends StatelessWidget {
   const App({super.key});
 
-  @override
-  State<App> createState() => _AppState();
-}
-
-class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     final brightness = context.watch<SettingsProvider>().getMode();

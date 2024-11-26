@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontend/pages/reservation/widgets/button.dart';
+import 'package:frontend/pages/reservation/widgets/panel_explain.dart';
+import 'package:frontend/pages/reservation/widgets/panel_title.dart';
 import 'package:frontend/providers/reservation_provider.dart';
+import 'package:frontend/providers/services_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/providers/settings_provider.dart';
 
@@ -15,18 +18,10 @@ class ReservationApp extends StatefulWidget {
 }
 
 class _ReservationAppState extends State<ReservationApp> {
+  int step = 0;
+
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> services = [
-      {"service": "Taglio capelli", "price": "20€", "duration": "30 min"},
-      {"service": "Barba disegnata", "price": "20€", "duration": "30 min"},
-      {"service": "Taglio Under 10", "price": "20€", "duration": "30 min"},
-      {"service": "Rasatura capelli", "price": "20€", "duration": "30 min"},
-      {"service": "Barba a macchinetta", "price": "20€", "duration": "30 min"},
-      {"service": "Taglio + barba disegnata", "price": "20€", "duration": "1h"},
-      {"service": "Rasatura totale B+C", "price": "20€", "duration": "1h"},
-    ];
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -59,53 +54,7 @@ class _ReservationAppState extends State<ReservationApp> {
             children: [
               serviceContent(),
               const SizedBox(height: 15.0),
-              Expanded(
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    const double itemHeight = 100; // Example height of the content
-                    final double itemWidth = constraints.maxWidth / 2 - 15; // Example width of the content
-                    final double aspectRatio = itemWidth / itemHeight;
-
-                    return GridView.builder(
-                      shrinkWrap: true,
-                      itemCount: services.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 15,
-                        mainAxisSpacing: 15,
-                        childAspectRatio: aspectRatio,
-                      ),
-                      itemBuilder: (context, index) => Button(
-                        onPressed: () {
-                          context.read<ReservationProvider>().setService(index);
-                        },
-                        selected: index == context.watch<ReservationProvider>().getServiceSelected(),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              services[index]['service'],
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                                services[index]['price'],
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold
-                                )
-                            ),
-                            Text(
-                              services[index]['duration'],
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              )
+              servicePicker()
             ],
           ),
         ),
@@ -114,7 +63,7 @@ class _ReservationAppState extends State<ReservationApp> {
   }
 
   Widget serviceContent() {
-    return Panel(
+    Widget service = Panel(
       child: Align(
         child: Text(
           "Servizi",
@@ -124,6 +73,84 @@ class _ReservationAppState extends State<ReservationApp> {
             fontWeight: FontWeight.bold
           ),
         ),
+      ),
+    );
+
+    if(step > 0) {
+      var serviceMap = context.watch<ServicesProvider>().getServices().firstWhere((serviceMap) {
+        return serviceMap['id'] == context.watch<ReservationProvider>().getServiceSelected();
+      });
+
+      service = Panel(
+        child: Row(
+          children: [
+            const PanelTitle(label: "Servizi"),
+            const Spacer(),
+            PanelExplain(label: '${serviceMap['service']} ${serviceMap['price']}')
+          ],
+        ),
+      );
+    }
+
+    return service;
+  }
+
+  Widget servicePicker() {
+    return Visibility(
+      visible: step == 0,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final services = context.watch<ServicesProvider>().getServices();
+          const double itemHeight = 100; // Example height of the content
+          final double itemWidth = constraints.maxWidth / 2 - 15; // Example width of the content
+          final double aspectRatio = itemWidth / itemHeight;
+
+          return GridView.builder(
+            shrinkWrap: true,
+            itemCount: services.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 15,
+              mainAxisSpacing: 15,
+              childAspectRatio: aspectRatio,
+            ),
+            itemBuilder: (context, index) {
+              Map<String, dynamic>? service = services[index];
+              return Button(
+                onPressed: () {
+                  context.read<ReservationProvider>().setService(
+                      services[index]['id']
+                  );
+                  setState(() {
+                    step = 1;
+                  });
+                },
+                selected: index == context.watch<ReservationProvider>().getServiceSelected(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      service['service'],
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                        service['price'],
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold
+                        )
+                    ),
+                    Text(
+                      service['duration'],
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
