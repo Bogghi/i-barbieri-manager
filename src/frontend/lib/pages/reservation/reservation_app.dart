@@ -82,11 +82,16 @@ class _ReservationAppState extends State<ReservationApp> {
       });
 
       service = Panel(
+        onTap: () {
+          setState(() {
+            step = 0;
+          });
+        },
         child: Row(
           children: [
-            const PanelTitle(label: "Servizi"),
+            const PanelTitle(label: "Servizio"),
             const Spacer(),
-            PanelExplain(label: '${serviceMap['service']} ${serviceMap['price']}')
+            PanelExplain(label: '${serviceMap['service']} ${serviceMap['price']}'),
           ],
         ),
       );
