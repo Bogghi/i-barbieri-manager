@@ -54,7 +54,8 @@ class _ReservationAppState extends State<ReservationApp> {
             children: [
               serviceContent(),
               const SizedBox(height: 15.0),
-              servicePicker()
+              servicePicker(),
+              barberContent()
             ],
           ),
         ),
@@ -156,6 +157,24 @@ class _ReservationAppState extends State<ReservationApp> {
             },
           );
         },
+      ),
+    );
+  }
+
+  Widget barberContent() {
+    return Visibility(
+      visible: step == 1,
+      child: Panel(
+        child: Align(
+          child: Text(
+            "Barbiere",
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+              fontSize: 18,
+              fontWeight: FontWeight.bold
+            ),
+          ),
+        ),
       ),
     );
   }
