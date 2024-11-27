@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontend/pages/reservation/widgets/button.dart';
-import 'package:frontend/pages/reservation/widgets/panel_explain.dart';
+import 'package:frontend/pages/reservation/widgets/panel_label.dart';
 import 'package:frontend/pages/reservation/widgets/panel_title.dart';
-import 'package:frontend/providers/reservation_provider.dart';
-import 'package:frontend/providers/services_provider.dart';
+
 import 'package:provider/provider.dart';
 import 'package:frontend/providers/settings_provider.dart';
+import 'package:frontend/providers/barbers_provider.dart';
+import 'package:frontend/providers/reservation_provider.dart';
+import 'package:frontend/providers/services_provider.dart';
 
 import 'widgets/panel.dart';
 
@@ -55,7 +57,8 @@ class _ReservationAppState extends State<ReservationApp> {
               serviceContent(),
               const SizedBox(height: 15.0),
               servicePicker(),
-              barberContent()
+              barberContent(),
+              barberPicker(),
             ],
           ),
         ),
@@ -64,16 +67,9 @@ class _ReservationAppState extends State<ReservationApp> {
   }
 
   Widget serviceContent() {
-    Widget service = Panel(
+    Widget service = const Panel(
       child: Align(
-        child: Text(
-          "Servizi",
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimaryContainer,
-            fontSize: 18,
-            fontWeight: FontWeight.bold
-          ),
-        ),
+        child: PanelTitle(label: "Servizi",),
       ),
     );
 
@@ -92,7 +88,7 @@ class _ReservationAppState extends State<ReservationApp> {
           children: [
             const PanelTitle(label: "Servizio"),
             const Spacer(),
-            PanelExplain(label: '${serviceMap['service']} ${serviceMap['price']}'),
+            PanelLabel(label: '${serviceMap['service']} ${serviceMap['price']}'),
           ],
         ),
       );
@@ -162,19 +158,94 @@ class _ReservationAppState extends State<ReservationApp> {
   }
 
   Widget barberContent() {
-    return Visibility(
-      visible: step == 1,
-      child: Panel(
-        child: Align(
-          child: Text(
-            "Barbiere",
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
-              fontSize: 18,
-              fontWeight: FontWeight.bold
+    Widget content = const Panel(
+      child: Align(
+        child: PanelTitle(label: "Barbiere"),
+      ),
+    );
+
+    var barberSelected = context.watch<ReservationProvider>().getBarberSelected();
+    if(step == 2 && barberSelected != null) {
+      var barberMap = context.watch<BarbersProvider>().getBarbers().firstWhere((barber) {
+        return barber['id'] == barberSelected;
+      });
+
+      content = Panel(
+        child: Row(
+          children: [
+            Text(
+              "Barbiere",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                fontSize: 18,
+                fontWeight: FontWeight.bold
+              ),
             ),
-          ),
+            const Spacer(),
+            PanelLabel(label: barberMap['name'])
+          ],
         ),
+      );
+    }
+
+    return Visibility(
+      visible: step >= 1,
+      child: content,
+    );
+  }
+
+  Widget barberPicker() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 15),
+      child: Visibility(
+        visible: step == 1,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final barbers = context.watch<BarbersProvider>().getBarbers();
+            const double itemHeight = 100; // Example height of the content
+            final double itemWidth = constraints.maxWidth / 2 - 15; // Example width of the content
+            final double aspectRatio = itemWidth / itemHeight;
+
+            return GridView.builder(
+              shrinkWrap: true,
+              itemCount: barbers.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 15,
+                childAspectRatio: aspectRatio,
+              ),
+              itemBuilder: (context, index) {
+                Map<String, dynamic> barber = barbers[index];
+                return Button(
+                  onPressed: () {
+                    context.read<ReservationProvider>().setBarber(
+                        barber['id']
+                    );
+                    setState(() {
+                      step = 2;
+                    });
+                  },
+                  selected: barber['id'] == context.watch<ReservationProvider>().getBarberSelected(),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(barber['img-url']),
+                        radius: 30,
+                      ),
+                      const Spacer(),
+                      Text(
+                        barber['name'],
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        )
       ),
     );
   }

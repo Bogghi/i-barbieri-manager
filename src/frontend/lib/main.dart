@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/providers/services_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:frontend/providers/reservation_provider.dart';
 import 'package:frontend/providers/settings_provider.dart';
+import 'package:frontend/providers/services_provider.dart';
+import 'package:frontend/providers/barbers_provider.dart';
 
 import 'package:frontend/theme/theme.dart';
 import 'package:frontend/theme/util.dart';
@@ -23,6 +24,7 @@ class ProviderApp extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => ReservationProvider()),
           ChangeNotifierProvider(create: (context) => SettingsProvider()),
           ChangeNotifierProvider(create: (context) => ServicesProvider()),
+          ChangeNotifierProvider(create: (context) => BarbersProvider()),
         ],
         child: const App()
     );
