@@ -16,23 +16,27 @@ class Panel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return onTap != null ? InkWell(
       onTap: () {
         if(onTap != null){
           onTap!();
         }
       },
-      child: Container(
-        decoration: BoxDecoration(
+      child: container(context),
+    ) : container(context);
+  }
+  
+  Widget container(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.primaryContainer,
           borderRadius: BorderRadius.circular(15)
-        ),
-        width: width,
-        height: height,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: child,
-        ),
+      ),
+      width: width,
+      height: height,
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: child,
       ),
     );
   }

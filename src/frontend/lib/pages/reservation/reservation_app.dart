@@ -55,7 +55,6 @@ class _ReservationAppState extends State<ReservationApp> {
           child: ListView(
             children: [
               serviceContent(),
-              const SizedBox(height: 15.0),
               servicePicker(),
               barberContent(),
               barberPicker(),
@@ -100,59 +99,62 @@ class _ReservationAppState extends State<ReservationApp> {
   Widget servicePicker() {
     return Visibility(
       visible: step == 0,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final services = context.watch<ServicesProvider>().getServices();
-          const double itemHeight = 100; // Example height of the content
-          final double itemWidth = constraints.maxWidth / 2 - 15; // Example width of the content
-          final double aspectRatio = itemWidth / itemHeight;
+      child: Padding(
+        padding: const EdgeInsets.only(top: 15),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final services = context.watch<ServicesProvider>().getServices();
+            const double itemHeight = 100; // Example height of the content
+            final double itemWidth = constraints.maxWidth / 2 - 15; // Example width of the content
+            final double aspectRatio = itemWidth / itemHeight;
 
-          return GridView.builder(
-            shrinkWrap: true,
-            itemCount: services.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 15,
-              mainAxisSpacing: 15,
-              childAspectRatio: aspectRatio,
-            ),
-            itemBuilder: (context, index) {
-              Map<String, dynamic>? service = services[index];
-              return Button(
-                onPressed: () {
-                  context.read<ReservationProvider>().setService(
-                      services[index]['id']
-                  );
-                  setState(() {
-                    step = 1;
-                  });
-                },
-                selected: index == context.watch<ReservationProvider>().getServiceSelected(),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      service['service'],
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                        service['price'],
+            return GridView.builder(
+              shrinkWrap: true,
+              itemCount: services.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 15,
+                childAspectRatio: aspectRatio,
+              ),
+              itemBuilder: (context, index) {
+                Map<String, dynamic>? service = services[index];
+                return Button(
+                  onPressed: () {
+                    context.read<ReservationProvider>().setService(
+                        services[index]['id']
+                    );
+                    setState(() {
+                      step = 1;
+                    });
+                  },
+                  selected: index == context.watch<ReservationProvider>().getServiceSelected(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        service['service'],
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold
-                        )
-                    ),
-                    Text(
-                      service['duration'],
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        },
+                      ),
+                      Text(
+                          service['price'],
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold
+                          )
+                      ),
+                      Text(
+                        service['duration'],
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
@@ -171,6 +173,11 @@ class _ReservationAppState extends State<ReservationApp> {
       });
 
       content = Panel(
+        onTap: () {
+          setState(() {
+            step = 1;
+          });
+        },
         child: Row(
           children: [
             Text(
@@ -190,7 +197,10 @@ class _ReservationAppState extends State<ReservationApp> {
 
     return Visibility(
       visible: step >= 1,
-      child: content,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 15),
+        child: content,
+      ),
     );
   }
 
