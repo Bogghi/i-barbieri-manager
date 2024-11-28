@@ -49,17 +49,15 @@ class _ReservationAppState extends State<ReservationApp> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListView(
-            children: [
-              serviceContent(),
-              servicePicker(),
-              barberContent(),
-              barberPicker(),
-            ],
-          ),
+        padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
+        child: ListView(
+          children: [
+            serviceContent(),
+            servicePicker(),
+            barberContent(),
+            barberPicker(),
+            dayContent(),
+          ],
         ),
       ),
     );
@@ -95,7 +93,6 @@ class _ReservationAppState extends State<ReservationApp> {
 
     return service;
   }
-
   Widget servicePicker() {
     return Visibility(
       visible: step == 0,
@@ -203,7 +200,6 @@ class _ReservationAppState extends State<ReservationApp> {
       ),
     );
   }
-
   Widget barberPicker() {
     return Padding(
       padding: const EdgeInsets.only(top: 15),
@@ -256,6 +252,43 @@ class _ReservationAppState extends State<ReservationApp> {
             );
           },
         )
+      ),
+    );
+  }
+
+  Widget dayContent() {
+
+    return Visibility(
+      visible: step == 2,
+      child: Panel(
+        child: Row(
+          children: [
+            const PanelTitle(label: "Giorno"),
+            const Spacer(),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(100, 25),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap
+              ),
+              onPressed: () async {
+                final pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime.now().subtract(const Duration(days: 0)),
+                  lastDate: DateTime(2100),
+                );
+                if(pickedDate != null) {
+                  context.read<ReservationProvider>().setDate(pickedDate!);
+                }
+              },
+              child: const Text("Seleaizona giorno")
+            )
+            // Visibility(
+            //   visible: context.watch<ReservationProvider>().getDate() != null,
+            //   child: PanelLabel(label: context.watch<ReservationProvider>().getDate().toString()),
+            // )
+          ],
+        ),
       ),
     );
   }
