@@ -57,7 +57,8 @@ class _ReservationAppState extends State<ReservationApp> {
             barberContent(),
             barberPicker(),
             dayContent(),
-            slotContent()
+            slotContent(),
+            slotPicker()
           ],
         ),
       ),
@@ -258,6 +259,11 @@ class _ReservationAppState extends State<ReservationApp> {
   }
 
   Widget dayContent() {
+    String dateLabel = "";
+
+    if(context.watch<ReservationProvider>().getDate() != null) {
+      dateLabel = context.watch<ReservationProvider>().getDate().toString().substring(0, 10);
+    }
 
     return Visibility(
       visible: step >= 2,
@@ -299,7 +305,7 @@ class _ReservationAppState extends State<ReservationApp> {
             ),
             Visibility(
               visible: step >= 3,
-              child: PanelLabel(label: context.watch<ReservationProvider>().getDate().toString().substring(0, 10)),
+              child: PanelLabel(label: dateLabel),
             )
           ],
         ),
@@ -313,13 +319,51 @@ class _ReservationAppState extends State<ReservationApp> {
       child: Padding(
         padding: const EdgeInsets.only(top: 15),
         child: Panel(
-          child: Column(
+          child: Row(
             children: [
-              PanelTitle(label: "Orario"),
+              const PanelTitle(label: "Orario"),
+              const Spacer(),
+              Visibility(
+                visible: step > 3,
+                child: PanelLabel(label: context.watch<ReservationProvider>().getSlot(context))
+              ),
             ],
           ),
         ),
       )
+    );
+  }
+  Widget slotPicker() {
+    return Visibility(
+      visible: step == 3,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 15),
+        child: GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: 8,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 1.8,
+            crossAxisSpacing: 15,
+            mainAxisSpacing: 15
+          ),
+          itemBuilder: (context, index) {
+            return Button(
+              onPressed: () {
+                context.read<ReservationProvider>().setSlot([
+                  const TimeOfDay(hour: 9, minute: 30), const TimeOfDay(hour: 10, minute: 0)
+                ]);
+                setState(() {
+                  step = 4;
+                });
+              },
+              selected: index == context.watch<ReservationProvider>().getServiceSelected(),
+              child: Text("9:30 - 10:00"),
+            );
+          },
+        ),
+      ),
     );
   }
 }

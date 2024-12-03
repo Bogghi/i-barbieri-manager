@@ -4,6 +4,7 @@ class ReservationProvider extends ChangeNotifier {
   int _service = -1;
   int ?_barber = null;
   DateTime ?_date = null;
+  List<TimeOfDay> _slot = [];
 
   ReservationProvider();
 
@@ -28,5 +29,13 @@ class ReservationProvider extends ChangeNotifier {
   }
   void setDate(DateTime date){
     _date = date;
+  }
+
+  void setSlot(List<TimeOfDay> slot) {
+    _slot = slot;
+  }
+  String getSlot(BuildContext context) {
+    var slot = _slot.map((slotTime) => slotTime.format(context)).join('-');
+    return slot;
   }
 }
