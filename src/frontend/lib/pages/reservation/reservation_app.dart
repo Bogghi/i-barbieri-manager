@@ -164,7 +164,7 @@ class _ReservationAppState extends State<ReservationApp> {
     );
 
     var barberSelected = context.watch<ReservationProvider>().getBarberSelected();
-    if(step == 2 && barberSelected != null) {
+    if(step >= 2 && barberSelected != null) {
       var barberMap = context.watch<BarbersProvider>().getBarbers().firstWhere((barber) {
         return barber['id'] == barberSelected;
       });
@@ -259,34 +259,40 @@ class _ReservationAppState extends State<ReservationApp> {
   Widget dayContent() {
 
     return Visibility(
-      visible: step == 2,
+      visible: step >= 2,
       child: Panel(
         child: Row(
           children: [
             const PanelTitle(label: "Giorno"),
             const Spacer(),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(100, 25),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap
+            Visibility(
+              visible: step == 2,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(100, 25),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap
+                ),
+                onPressed: () async {
+                  final pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime.now().subtract(const Duration(days: 0)),
+                    lastDate: DateTime(2100),
+                  );
+                  if(pickedDate != null) {
+                    context.read<ReservationProvider>().setDate(pickedDate);
+                    setState(() {
+                      step = 3;
+                    });
+                  }
+                },
+                child: const Text("Seleaizona giorno")
               ),
-              onPressed: () async {
-                final pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now().subtract(const Duration(days: 0)),
-                  lastDate: DateTime(2100),
-                );
-                if(pickedDate != null) {
-                  context.read<ReservationProvider>().setDate(pickedDate!);
-                }
-              },
-              child: const Text("Seleaizona giorno")
+            ),
+            Visibility(
+              visible: step >= 3,
+              child: PanelLabel(label: context.watch<ReservationProvider>().getDate().toString().substring(0, 10)),
             )
-            // Visibility(
-            //   visible: context.watch<ReservationProvider>().getDate() != null,
-            //   child: PanelLabel(label: context.watch<ReservationProvider>().getDate().toString()),
-            // )
           ],
         ),
       ),
