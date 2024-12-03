@@ -57,6 +57,7 @@ class _ReservationAppState extends State<ReservationApp> {
             barberContent(),
             barberPicker(),
             dayContent(),
+            slotContent()
           ],
         ),
       ),
@@ -261,6 +262,13 @@ class _ReservationAppState extends State<ReservationApp> {
     return Visibility(
       visible: step >= 2,
       child: Panel(
+        onTap: () {
+          if(step > 2){
+            setState(() {
+              step = 2;
+            });
+          }
+        },
         child: Row(
           children: [
             const PanelTitle(label: "Giorno"),
@@ -296,6 +304,22 @@ class _ReservationAppState extends State<ReservationApp> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget slotContent() {
+    return Visibility(
+      visible: step >= 3,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 15),
+        child: Panel(
+          child: Column(
+            children: [
+              PanelTitle(label: "Orario"),
+            ],
+          ),
+        ),
+      )
     );
   }
 }
