@@ -9,6 +9,7 @@ import 'package:frontend/providers/barbers_provider.dart';
 import 'package:frontend/theme/theme.dart';
 import 'package:frontend/theme/util.dart';
 import 'package:frontend/pages/reservation/reservation_app.dart';
+import 'package:frontend/pages/confirmReservation/confirm_reservation_app.dart';
 
 void main() {
   runApp(const ProviderApp());
@@ -49,7 +50,8 @@ class App extends StatelessWidget {
       initialRoute: '/reservation',
       routes: {
         '/': (context) => const Center(child: Text("this is the index page"),),
-        '/reservation': (context) => const ReservationApp()
+        '/reservation': (context) => const ReservationApp(),
+        '/confirmReservation': (context) => const ConfirmReservationApp()
       },
     );
   }

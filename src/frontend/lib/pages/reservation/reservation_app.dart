@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+
 import 'package:frontend/pages/reservation/widgets/button.dart';
 import 'package:frontend/pages/reservation/widgets/panel_label.dart';
 import 'package:frontend/pages/reservation/widgets/panel_title.dart';
-
-import 'package:provider/provider.dart';
-import 'package:frontend/providers/settings_provider.dart';
 import 'package:frontend/providers/barbers_provider.dart';
 import 'package:frontend/providers/reservation_provider.dart';
 import 'package:frontend/providers/services_provider.dart';
+import 'package:frontend/pages/shared/AppAppBar.dart';
 
 import 'widgets/panel.dart';
 
@@ -25,29 +24,7 @@ class _ReservationAppState extends State<ReservationApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: const Row(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 10),
-              child: FaIcon(FontAwesomeIcons.scissors),
-            ),
-            Text("I Barbieri Lissone")
-          ],
-        ),
-        centerTitle: false,
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            onPressed: (){
-              context.read<SettingsProvider>().changeMode();
-            },
-            icon: Theme.of(context).colorScheme.brightness == Brightness.light ?
-              const Icon(Icons.sunny) : const Icon(Icons.nightlight_outlined),
-          ),
-        ],
-      ),
+      appBar: const AppAppBar(),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
         child: ListView(
@@ -425,7 +402,9 @@ class _ReservationAppState extends State<ReservationApp> {
                                     borderRadius: BorderRadius.circular(15)
                                   ),
                                 ),
-                                onPressed: (){},
+                                onPressed: (){
+                                  Navigator.pushNamed(context, '/confirmReservation');
+                                },
                                 child: const Text(
                                   'Salva',
                                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25,)
