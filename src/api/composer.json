@@ -1,0 +1,17 @@
+{
+    "name": "barber/matteo",
+    "require": {
+        "slim/slim": "^4.14"
+    },
+    "autoload": {
+        "psr-4": {
+            "Barber\\Matteo\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Matteo Simone Borghi",
+            "email": "Bogghi@users.noreply.github.com"
+        }
+    ]
+}
