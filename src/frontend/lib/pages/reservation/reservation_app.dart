@@ -58,7 +58,8 @@ class _ReservationAppState extends State<ReservationApp> {
             barberPicker(),
             dayContent(),
             slotContent(),
-            slotPicker()
+            slotPicker(),
+            confirmationButton()
           ],
         ),
       ),
@@ -319,6 +320,11 @@ class _ReservationAppState extends State<ReservationApp> {
       child: Padding(
         padding: const EdgeInsets.only(top: 15),
         child: Panel(
+          onTap: () {
+            setState(() {
+              step = 3;
+            });
+          },
           child: Row(
             children: [
               const PanelTitle(label: "Orario"),
@@ -364,6 +370,86 @@ class _ReservationAppState extends State<ReservationApp> {
           },
         ),
       ),
+    );
+  }
+
+  Widget confirmationButton() {
+    return Visibility(
+      visible: step == 4,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 30),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15)
+            )
+          ),
+          onPressed: (){
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (BuildContext context) {
+                return SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Ultimo Step", style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold
+                          )),
+                          const Text("Per poterti comunicare la conferma dell'appuntamento ti chiediamo di lasciarci il tuo numero di telefono",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 18)
+                          ),
+                          const TextField(
+                            decoration: InputDecoration(
+                              labelText: "Numero"
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 15),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Theme.of(context).colorScheme.primary,
+                                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15)
+                                  ),
+                                ),
+                                onPressed: (){},
+                                child: const Text(
+                                  'Salva',
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25,)
+                                )
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
+            );
+          },
+          child: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text("Conferma", style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            )),
+          ),
+        ),
+      )
     );
   }
 }
