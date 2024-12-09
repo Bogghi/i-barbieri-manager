@@ -47,4 +47,5 @@ src/frontend/build
 
 /src/api/.idea
 /src/api/.vscode
+/src/api/env.php
 /src/api/vendor

@@ -49,7 +49,7 @@ class App extends StatelessWidget {
       // Temporary set to reservation to work on that specific ui section
       initialRoute: '/reservation',
       routes: {
-        '/': (context) => const Center(child: Text("this is the index page"),),
+        // '/': (context) => const Center(child: Text("this is the index page"),),
         '/reservation': (context) => const ReservationApp(),
         '/confirmReservation': (context) => const ConfirmReservationApp()
       },
