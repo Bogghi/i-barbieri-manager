@@ -46,6 +46,7 @@ class App extends StatelessWidget {
     MaterialTheme theme = MaterialTheme(textTheme);
 
     context.read<BarberStoresProvider>().fetch();
+    context.read<BarbersProvider>().fetch(12);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class BarberStoresController extends DataAccess
 {
-    public function getBarbers(Request $request, Response $response, $args): Response
+    public function getStores(Request $request, Response $response, $args): Response
     {
         $result['barberStores'] = $this->get('barber_stores');
 

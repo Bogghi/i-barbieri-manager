@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/providers/barber_stores_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:frontend/pages/reservation/widgets/button.dart';
@@ -8,7 +7,9 @@ import 'package:frontend/pages/reservation/widgets/panel_title.dart';
 import 'package:frontend/providers/barbers_provider.dart';
 import 'package:frontend/providers/reservation_provider.dart';
 import 'package:frontend/providers/services_provider.dart';
+import 'package:frontend/providers/barber_stores_provider.dart';
 import 'package:frontend/pages/shared/AppAppBar.dart';
+import 'package:frontend/models/barber.dart';
 
 import 'widgets/panel.dart';
 
@@ -147,7 +148,7 @@ class _ReservationAppState extends State<ReservationApp> {
     var barberSelected = context.watch<ReservationProvider>().getBarberSelected();
     if(step >= 2 && barberSelected != null) {
       var barberMap = context.watch<BarbersProvider>().getBarbers().firstWhere((barber) {
-        return barber['id'] == barberSelected;
+        return barber.barberId == barberSelected;
       });
 
       content = Panel(
@@ -167,7 +168,7 @@ class _ReservationAppState extends State<ReservationApp> {
               ),
             ),
             const Spacer(),
-            PanelLabel(label: barberMap['name'])
+            PanelLabel(label: barberMap.name)
           ],
         ),
       );
@@ -203,27 +204,27 @@ class _ReservationAppState extends State<ReservationApp> {
                 childAspectRatio: aspectRatio,
               ),
               itemBuilder: (context, index) {
-                Map<String, dynamic> barber = barbers[index];
+                Barber barber = barbers[index];
                 return Button(
                   onPressed: () {
                     context.read<ReservationProvider>().setBarber(
-                        barber['id']
+                        barber.barberId
                     );
                     setState(() {
                       step = 2;
                     });
                   },
-                  selected: barber['id'] == context.watch<ReservationProvider>().getBarberSelected(),
+                  selected: barber.barberId == context.watch<ReservationProvider>().getBarberSelected(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CircleAvatar(
-                        backgroundImage: NetworkImage(barber['img-url']),
+                        backgroundImage: NetworkImage(barber.imgUrl),
                         radius: 30,
                       ),
                       const Spacer(),
                       Text(
-                        barber['name'],
+                        barber.name,
                         textAlign: TextAlign.center,
                       ),
                     ],
