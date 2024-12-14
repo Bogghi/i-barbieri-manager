@@ -7,11 +7,11 @@ use App\DataAccess\DataAccess;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-class BarberController extends DataAccess
+class BarberStoresController extends DataAccess
 {
     public function getBarbers(Request $request, Response $response, $args): Response
     {
-        $result['rows'] = $this->get('barbers');
+        $result['barberStores'] = $this->get('barber_stores');
 
         $response->getBody()->write(json_encode($result));
 

@@ -29,10 +29,12 @@ class ReservationProvider extends ChangeNotifier {
   }
   void setDate(DateTime date){
     _date = date;
+    notifyListeners();
   }
 
   void setSlot(List<TimeOfDay> slot) {
     _slot = slot;
+    notifyListeners();
   }
   String getSlot(BuildContext context) {
     var slot = _slot.map((slotTime) => slotTime.format(context)).join('-');

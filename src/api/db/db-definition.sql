@@ -1,9 +1,9 @@
-create table barbers (
-    barber_id int primary key auto_increment,
+create table barber_stores (
+    barber_store_id int primary key auto_increment,
     name text not null,
     address text
 );
-insert into barbers set name = 'I Barbieri Lissone', address = 'Via Giosuè Carducci, 35, 20851 Lissone MB';
+insert into barber_stores set name = 'I Barbieri Lissone', address = 'Via Giosuè Carducci, 35, 20851 Lissone MB';
 
 create table barber_service (
     barber_service_id int primary key auto_increment,
