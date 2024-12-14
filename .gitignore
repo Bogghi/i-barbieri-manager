@@ -50,3 +50,4 @@ src/frontend/build
 /src/api/.vscode
 /src/api/env.php
 /src/api/vendor
+/src/api/package.xml
