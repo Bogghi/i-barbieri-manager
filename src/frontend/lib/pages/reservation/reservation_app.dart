@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/barber_store_service.dart';
 import 'package:provider/provider.dart';
 
 import 'package:frontend/pages/reservation/widgets/button.dart';
@@ -6,8 +7,7 @@ import 'package:frontend/pages/reservation/widgets/panel_label.dart';
 import 'package:frontend/pages/reservation/widgets/panel_title.dart';
 import 'package:frontend/providers/barbers_provider.dart';
 import 'package:frontend/providers/reservation_provider.dart';
-import 'package:frontend/providers/services_provider.dart';
-import 'package:frontend/providers/barber_stores_provider.dart';
+import 'package:frontend/providers/barber_store_services_provider.dart';
 import 'package:frontend/pages/shared/AppAppBar.dart';
 import 'package:frontend/models/barber.dart';
 
@@ -53,8 +53,8 @@ class _ReservationAppState extends State<ReservationApp> {
     );
 
     if(step > 0) {
-      var serviceMap = context.watch<ServicesProvider>().getServices().firstWhere((serviceMap) {
-        return serviceMap['id'] == context.watch<ReservationProvider>().getServiceSelected();
+      var serviceMap = context.watch<BarberStoreServicesProvider>().getServices().firstWhere((serviceMap) {
+        return serviceMap.barberServiceId == context.watch<ReservationProvider>().getServiceSelected();
       });
 
       service = Panel(
@@ -67,7 +67,7 @@ class _ReservationAppState extends State<ReservationApp> {
           children: [
             const PanelTitle(label: "Servizio"),
             const Spacer(),
-            PanelLabel(label: '${serviceMap['service']} ${serviceMap['price']}'),
+            PanelLabel(label: '${serviceMap.serviceName} ${serviceMap.formattedPrice()}'),
           ],
         ),
       );
@@ -82,7 +82,7 @@ class _ReservationAppState extends State<ReservationApp> {
         padding: const EdgeInsets.only(top: 15),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final services = context.watch<ServicesProvider>().getServices();
+            final services = context.watch<BarberStoreServicesProvider>().getServices();
             const double itemHeight = 100; // Example height of the content
             final double itemWidth = constraints.maxWidth / 2 - 15; // Example width of the content
             final double aspectRatio = itemWidth / itemHeight;
@@ -97,12 +97,10 @@ class _ReservationAppState extends State<ReservationApp> {
                 childAspectRatio: aspectRatio,
               ),
               itemBuilder: (context, index) {
-                Map<String, dynamic>? service = services[index];
+                BarberStoreService service = services[index];
                 return Button(
                   onPressed: () {
-                    context.read<ReservationProvider>().setService(
-                        services[index]['id']
-                    );
+                    context.read<ReservationProvider>().setService(service.barberServiceId);
                     setState(() {
                       step = 1;
                     });
@@ -112,11 +110,11 @@ class _ReservationAppState extends State<ReservationApp> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        service['service'],
+                        service.serviceName,
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                          service['price'],
+                          service.formattedPrice(),
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                               fontSize: 18,
@@ -124,7 +122,7 @@ class _ReservationAppState extends State<ReservationApp> {
                           )
                       ),
                       Text(
-                        service['duration'],
+                        service.formattedDuration(),
                         textAlign: TextAlign.center,
                       ),
                     ],

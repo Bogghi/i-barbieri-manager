@@ -8,4 +8,4 @@ if(!isset($app)){ exit(); }
 
 $app->get("/barber-stores/list", BarberStoresController::class.":getStores");
 $app->get("/barber-stores/{id}/barbers/list", BarbersController::class.":getBarbers");
-$app->get("/barber-stores/{id}/service/list", BarberStoreServicesController::class.":getServices");
+$app->get("/barber-stores/{id}/services/list", BarberStoreServicesController::class.":getServices");

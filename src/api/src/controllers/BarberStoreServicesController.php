@@ -11,7 +11,7 @@ class BarberStoreServicesController extends DataAccess
 {
     public function getServices(Request $request, Response $response, $args): Response
     {
-        $result['barberStoreServices'] = $this->get('barber_store_services');
+        $result['services'] = $this->get('barber_store_services');
 
         $response->getBody()->write(json_encode($result));
 

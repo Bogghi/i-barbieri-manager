@@ -3,13 +3,12 @@ import 'package:provider/provider.dart';
 
 import 'package:frontend/providers/reservation_provider.dart';
 import 'package:frontend/providers/settings_provider.dart';
-import 'package:frontend/providers/services_provider.dart';
+import 'package:frontend/providers/barber_store_services_provider.dart';
 import 'package:frontend/providers/barbers_provider.dart';
 import 'package:frontend/providers/barber_stores_provider.dart';
 
 import 'package:frontend/theme/theme.dart';
 import 'package:frontend/theme/util.dart';
-import 'package:frontend/api/api_client.dart';
 import 'package:frontend/pages/reservation/reservation_app.dart';
 import 'package:frontend/pages/confirmReservation/confirm_reservation_app.dart';
 
@@ -26,7 +25,7 @@ class ProviderApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(create: (context) => ReservationProvider()),
           ChangeNotifierProvider(create: (context) => SettingsProvider()),
-          ChangeNotifierProvider(create: (context) => ServicesProvider()),
+          ChangeNotifierProvider(create: (context) => BarberStoreServicesProvider()),
           ChangeNotifierProvider(create: (context) => BarbersProvider()),
           ChangeNotifierProvider(create: (context) => BarberStoresProvider()),
         ],
@@ -47,6 +46,7 @@ class App extends StatelessWidget {
 
     context.read<BarberStoresProvider>().fetch();
     context.read<BarbersProvider>().fetch(12);
+    context.read<BarberStoreServicesProvider>().fetch(12);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

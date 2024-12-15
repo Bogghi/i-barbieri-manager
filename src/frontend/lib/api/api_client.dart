@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:frontend/models/barber.dart';
 import 'package:frontend/models/barber_store.dart';
+import 'package:frontend/models/barber_store_service.dart';
 import 'package:http/http.dart';
 import 'package:frontend/meta/constants.dart';
 
@@ -80,6 +81,29 @@ abstract class ApiClient {
             barberId: barber['barber_id'],
             name: barber['name'],
             imgUrl: barber['img_url']
+          ));
+        }
+      }
+    }
+
+    return result;
+  }
+
+  static Future<List<BarberStoreService>> getServices(int barberStoreId) async {
+    final List<BarberStoreService> result = [];
+    Response response = await getData("/barber-stores/$barberStoreId/services/list", {});
+
+    final Status status = _getStatusFromResponse(response);
+    if(status == Status.ok) {
+      final Map<String, dynamic> parsedBody = jsonDecode(response.body);
+
+      if(parsedBody.containsKey('services')) {
+        for (var service in (parsedBody['services'] as List<dynamic>)) {
+          result.add(BarberStoreService(
+            barberServiceId: service['barber_service_id'],
+            serviceName: service['service_name'],
+            servicePrice: service['service_price'],
+            duration: service['duration']
           ));
         }
       }
