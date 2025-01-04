@@ -12,11 +12,13 @@ import 'package:frontend/providers/reservation_provider.dart';
 import 'package:frontend/providers/barber_store_services_provider.dart';
 import 'package:frontend/pages/shared/AppAppBar.dart';
 import 'package:frontend/models/barber.dart';
+import 'package:frontend/models/slot.dart';
 
 import 'widgets/panel.dart';
 
 class ReservationApp extends StatelessWidget {
   late BuildContext context;
+  final TextEditingController numberController = TextEditingController();
 
   ReservationApp({super.key});
 
@@ -230,14 +232,12 @@ class ReservationApp extends StatelessWidget {
     if(context.watch<ReservationProvider>().getDate() != null) {
       dateLabel = context.watch<ReservationProvider>().getDate().toString().substring(0, 10);
     }
-    print(["dayContent: ", context.watch<ReservationProvider>().getStep()]);
+
     return Visibility(
       visible: context.watch<ReservationProvider>().getStep() >= 2,
       child: Panel(
         onTap: () {
-          if(context.watch<ReservationProvider>().getStep() > 2){
-            context.read<ReservationProvider>().setStep(2);
-          }
+          context.read<ReservationProvider>().setStep(2);
         },
         child: Row(
           children: [
@@ -258,8 +258,11 @@ class ReservationApp extends StatelessWidget {
                     lastDate: DateTime(2100),
                   );
 
-                  if(pickedDate != null && context.mounted) {
+                  if (pickedDate != null && context.mounted) {
                     context.read<ReservationProvider>().setDate(pickedDate);
+                    var barberId = context.read<ReservationProvider>().getBarberSelected() ?? 0;
+                    var serviceId = context.read<ReservationProvider>().getServiceSelected();
+                    context.read<SlotProvider>().fetch(12, pickedDate, barberId, serviceId);
                   }
                 },
                 child: const Text("Seleaizona giorno")
@@ -276,6 +279,13 @@ class ReservationApp extends StatelessWidget {
   }
 
   Widget slotContent() {
+    String label = "";
+
+    if(context.watch<ReservationProvider>().getSlot() != null) {
+      int slotId = context.watch<ReservationProvider>().getSlot()!;
+      label = context.watch<SlotProvider>().getSlots()[slotId].getFormattedString();
+    }
+
     return Visibility(
       visible: context.watch<ReservationProvider>().getStep() >= 3,
       child: Padding(
@@ -290,7 +300,7 @@ class ReservationApp extends StatelessWidget {
               const Spacer(),
               Visibility(
                 visible: context.watch<ReservationProvider>().getStep() > 3,
-                child: const PanelLabel(label: "test")
+                child: PanelLabel(label: label)
               ),
             ],
           ),
@@ -299,33 +309,38 @@ class ReservationApp extends StatelessWidget {
     );
   }
   Widget slotPicker() {
+    Widget picker;
+
+    if(context.watch<SlotProvider>().noSlot()) {
+      picker = const Center(child: Text("Prenotazioni non disponibili"));
+    } else {
+      picker = GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: context.watch<SlotProvider>().getSlots().length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 1.8,
+            crossAxisSpacing: 15,
+            mainAxisSpacing: 15
+        ),
+        itemBuilder: (context, index) {
+          return Button(
+            onPressed: () {
+              this.context.read<ReservationProvider>().setSlot(index);
+            },
+            selected: index == this.context.watch<ReservationProvider>().getServiceSelected(),
+            child: Text(this.context.watch<SlotProvider>().getSlots()[index].getFormattedString()),
+          );
+        },
+      );
+    }
 
     return Visibility(
       visible: context.watch<ReservationProvider>().getStep() == 3,
       child: Padding(
         padding: const EdgeInsets.only(top: 15),
-        child: GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: context.watch<SlotProvider>().getSlots().length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 1.8,
-            crossAxisSpacing: 15,
-            mainAxisSpacing: 15
-          ),
-          itemBuilder: (context, index) {
-            return Button(
-              onPressed: () {
-                context.read<ReservationProvider>().setSlot([
-                  const TimeOfDay(hour: 9, minute: 30), const TimeOfDay(hour: 10, minute: 0)
-                ]);
-              },
-              selected: index == context.watch<ReservationProvider>().getServiceSelected(),
-              child: Text(context.watch<SlotProvider>().getSlots()[index].getFormattedString()),
-            );
-          },
-        ),
+        child: picker,
       ),
     );
   }
@@ -347,7 +362,7 @@ class ReservationApp extends StatelessWidget {
             showModalBottomSheet(
               context: context,
               isScrollControlled: true,
-              builder: (BuildContext context) {
+              builder: (context) {
                 return SafeArea(
                   child: Padding(
                     padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -365,8 +380,9 @@ class ReservationApp extends StatelessWidget {
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: 18)
                           ),
-                          const TextField(
-                            decoration: InputDecoration(
+                          TextField(
+                            controller: numberController,
+                            decoration: const InputDecoration(
                               labelText: "Numero"
                             ),
                           ),
@@ -383,6 +399,7 @@ class ReservationApp extends StatelessWidget {
                                   ),
                                 ),
                                 onPressed: (){
+                                  this.context.read<ReservationProvider>().setNumber(numberController.text);
                                   Navigator.pushNamed(context, '/confirmReservation');
                                 },
                                 child: const Text(

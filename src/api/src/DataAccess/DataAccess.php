@@ -50,6 +50,7 @@ class DataAccess
 
     public function customQuery(string $query): array
     {
+        $this->connectPdo();
         $result = [];
 
         try{

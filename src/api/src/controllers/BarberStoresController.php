@@ -23,12 +23,10 @@ class BarberStoresController extends DataAccess
     {
         $result = ['slots' => []];
 
-        $date = $args['day'].'/'.$args['month'].'/'.$args['year'];
+        $date = $args['year'].'/'.$args['month'].'/'.$args['day'];
 
-        $weekDaySchedules = $this->get(table: 'barber_store_schedules', args: ['day' => "lower(dayname($date))", 'barber']);
-        $reservations = $this->get(table: 'barber_store_reservations', args: [
-            'day' => $date, 'barber_id' => $args['barberId']
-        ]);
+        $weekDaySchedules = $this->customQuery("select * from barber_store_schedules where weekday = lower(dayname('$date'))");
+        $reservations = $this->get(table: 'barber_store_reservations', args: ['day' => $date, 'barber_id' => $args['barberId']]);
         $serviceData = $this->get(table: 'barber_store_services', args: ['barber_service_id' => $args['serviceId']]);
 
         $duration = (int)$serviceData[0]['duration'] > 0 ? $serviceData[0]['duration'] : 30 ;
@@ -51,7 +49,7 @@ class BarberStoresController extends DataAccess
                 }
 
                 if($validSlot) {
-                    $result['slots'] = [
+                    $result['slots'][] = [
                         'startTime' => date('H:i', $slotStart),
                         'endTime' => date('H:i', $slotEnd)
                     ];
