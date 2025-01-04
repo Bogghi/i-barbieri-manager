@@ -17,5 +17,6 @@ class BarberStoreServicesProvider extends ChangeNotifier {
     final List<BarberStoreService> data = await ApiClient.getServices(barberStoreId);
 
     _services = data;
+    notifyListeners();
   }
 }

@@ -6,9 +6,11 @@ import 'package:frontend/providers/settings_provider.dart';
 import 'package:frontend/providers/barber_store_services_provider.dart';
 import 'package:frontend/providers/barbers_provider.dart';
 import 'package:frontend/providers/barber_stores_provider.dart';
+import 'package:frontend/providers/slot_provider.dart';
 
 import 'package:frontend/theme/theme.dart';
 import 'package:frontend/theme/util.dart';
+import 'package:frontend/meta/navigation_service.dart';
 import 'package:frontend/pages/reservation/reservation_app.dart';
 import 'package:frontend/pages/confirmReservation/confirm_reservation_app.dart';
 
@@ -28,6 +30,7 @@ class ProviderApp extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => BarberStoreServicesProvider()),
           ChangeNotifierProvider(create: (context) => BarbersProvider()),
           ChangeNotifierProvider(create: (context) => BarberStoresProvider()),
+          ChangeNotifierProvider(create: (context) => SlotProvider())
         ],
         child: const App()
     );
@@ -50,13 +53,14 @@ class App extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      navigatorKey: navigatorKey,
       title: 'Barber manager',
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
       // Temporary set to reservation to work on that specific ui section
       initialRoute: '/reservation',
       routes: {
         // '/': (context) => const Center(child: Text("this is the index page"),),
-        '/reservation': (context) => const ReservationApp(),
+        '/reservation': (context) => ReservationApp(),
         '/confirmReservation': (context) => const ConfirmReservationApp()
       },
     );

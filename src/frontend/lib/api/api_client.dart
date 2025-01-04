@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:frontend/models/barber.dart';
 import 'package:frontend/models/barber_store.dart';
 import 'package:frontend/models/barber_store_service.dart';
+import 'package:frontend/models/slot.dart';
 import 'package:http/http.dart';
 import 'package:frontend/meta/constants.dart';
 
@@ -104,6 +105,29 @@ abstract class ApiClient {
             serviceName: service['service_name'],
             servicePrice: service['service_price'],
             duration: service['duration']
+          ));
+        }
+      }
+    }
+
+    return result;
+  }
+
+  static Future<List<Slot>> getSlots(int barberStoreId, DateTime day, int barberId, int serviceId) async {
+    final List<Slot> result = [];
+    Response response = await getData(
+      "/barber-stores/$barberStoreId/day/${day.day}/${day.month}/${day.year}/barber/$barberId/service/$serviceId/open-reservation", {},
+    );
+    
+    final Status status = _getStatusFromResponse(response);
+    if(status == Status.ok) {
+      final Map<String, dynamic> parsedBody = jsonDecode(response.body);
+      
+      if(parsedBody.containsKey('slots')) {
+        for(var slot in (parsedBody['slots'] as List<dynamic>)) {
+          result.add(Slot(
+            startTime: slot['startTime'],
+            endTime: slot['endTime']
           ));
         }
       }

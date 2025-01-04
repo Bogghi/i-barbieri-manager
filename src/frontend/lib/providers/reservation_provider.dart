@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ReservationProvider extends ChangeNotifier {
+  int _reservationStep = 0;
   int _service = -1;
   int ?_barber = null;
   DateTime ?_date = null;
@@ -8,11 +9,20 @@ class ReservationProvider extends ChangeNotifier {
 
   ReservationProvider();
 
+  void setStep(int s) {
+    _reservationStep = s;
+    notifyListeners();
+  }
+  int getStep() {
+    return _reservationStep;
+  }
+
   int getServiceSelected() {
     return _service;
   }
   void setService(int service) {
     _service = service;
+    _reservationStep = 1;
     notifyListeners();
   }
 
@@ -21,6 +31,7 @@ class ReservationProvider extends ChangeNotifier {
   }
   void setBarber(int barber) {
     _barber = barber;
+    _reservationStep = 2;
     notifyListeners();
   }
 
@@ -29,11 +40,13 @@ class ReservationProvider extends ChangeNotifier {
   }
   void setDate(DateTime date){
     _date = date;
+    _reservationStep = 3;
     notifyListeners();
   }
 
   void setSlot(List<TimeOfDay> slot) {
     _slot = slot;
+    _reservationStep = 4;
     notifyListeners();
   }
   String getSlot(BuildContext context) {

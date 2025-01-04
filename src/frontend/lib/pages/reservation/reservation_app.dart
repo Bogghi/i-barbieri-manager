@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/barber_store_service.dart';
+import 'package:frontend/providers/slot_provider.dart';
 import 'package:provider/provider.dart';
 
+import 'package:frontend/meta/navigation_service.dart';
 import 'package:frontend/pages/reservation/widgets/button.dart';
 import 'package:frontend/pages/reservation/widgets/panel_label.dart';
 import 'package:frontend/pages/reservation/widgets/panel_title.dart';
@@ -13,18 +15,14 @@ import 'package:frontend/models/barber.dart';
 
 import 'widgets/panel.dart';
 
-class ReservationApp extends StatefulWidget {
-  const ReservationApp({super.key});
+class ReservationApp extends StatelessWidget {
+  late BuildContext context;
 
-  @override
-  State<ReservationApp> createState() => _ReservationAppState();
-}
-
-class _ReservationAppState extends State<ReservationApp> {
-  int step = 0;
+  ReservationApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    this.context = context;
     return Scaffold(
       appBar: const AppAppBar(),
       body: Padding(
@@ -52,16 +50,14 @@ class _ReservationAppState extends State<ReservationApp> {
       ),
     );
 
-    if(step > 0) {
+    if(context.watch<ReservationProvider>().getStep() > 0) {
       var serviceMap = context.watch<BarberStoreServicesProvider>().getServices().firstWhere((serviceMap) {
         return serviceMap.barberServiceId == context.watch<ReservationProvider>().getServiceSelected();
       });
 
       service = Panel(
         onTap: () {
-          setState(() {
-            step = 0;
-          });
+          context.read<ReservationProvider>().setStep(0);
         },
         child: Row(
           children: [
@@ -77,19 +73,19 @@ class _ReservationAppState extends State<ReservationApp> {
   }
   Widget servicePicker() {
     return Visibility(
-      visible: step == 0,
+      visible: context.watch<ReservationProvider>().getStep() == 0,
       child: Padding(
         padding: const EdgeInsets.only(top: 15),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final services = context.watch<BarberStoreServicesProvider>().getServices();
+            final services = navigatorKey.currentContext?.watch<BarberStoreServicesProvider>().getServices();
             const double itemHeight = 100; // Example height of the content
             final double itemWidth = constraints.maxWidth / 2 - 15; // Example width of the content
             final double aspectRatio = itemWidth / itemHeight;
 
             return GridView.builder(
               shrinkWrap: true,
-              itemCount: services.length,
+              itemCount: services?.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 15,
@@ -97,20 +93,17 @@ class _ReservationAppState extends State<ReservationApp> {
                 childAspectRatio: aspectRatio,
               ),
               itemBuilder: (context, index) {
-                BarberStoreService service = services[index];
+                BarberStoreService? service = services?[index];
                 return Button(
                   onPressed: () {
-                    context.read<ReservationProvider>().setService(service.barberServiceId);
-                    setState(() {
-                      step = 1;
-                    });
+                    this.context.read<ReservationProvider>().setService(service.barberServiceId);
                   },
-                  selected: index == context.watch<ReservationProvider>().getServiceSelected(),
+                  selected: index == this.context.watch<ReservationProvider>().getServiceSelected(),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        service.serviceName,
+                        service!.serviceName,
                         textAlign: TextAlign.center,
                       ),
                       Text(
@@ -144,16 +137,14 @@ class _ReservationAppState extends State<ReservationApp> {
     );
 
     var barberSelected = context.watch<ReservationProvider>().getBarberSelected();
-    if(step >= 2 && barberSelected != null) {
+    if(context.watch<ReservationProvider>().getStep() >= 2 && barberSelected != null) {
       var barberMap = context.watch<BarbersProvider>().getBarbers().firstWhere((barber) {
         return barber.barberId == barberSelected;
       });
 
       content = Panel(
         onTap: () {
-          setState(() {
-            step = 1;
-          });
+          context.read<ReservationProvider>().setStep(1);
         },
         child: Row(
           children: [
@@ -173,7 +164,7 @@ class _ReservationAppState extends State<ReservationApp> {
     }
 
     return Visibility(
-      visible: step >= 1,
+      visible: context.watch<ReservationProvider>().getStep() >= 1,
       child: Padding(
         padding: const EdgeInsets.only(top: 15),
         child: content,
@@ -184,7 +175,7 @@ class _ReservationAppState extends State<ReservationApp> {
     return Padding(
       padding: const EdgeInsets.only(top: 15),
       child: Visibility(
-        visible: step == 1,
+        visible: context.watch<ReservationProvider>().getStep() == 1,
         child: LayoutBuilder(
           builder: (context, constraints) {
             final barbers = context.watch<BarbersProvider>().getBarbers();
@@ -205,12 +196,9 @@ class _ReservationAppState extends State<ReservationApp> {
                 Barber barber = barbers[index];
                 return Button(
                   onPressed: () {
-                    context.read<ReservationProvider>().setBarber(
+                    this.context.read<ReservationProvider>().setBarber(
                         barber.barberId
                     );
-                    setState(() {
-                      step = 2;
-                    });
                   },
                   selected: barber.barberId == context.watch<ReservationProvider>().getBarberSelected(),
                   child: Row(
@@ -242,15 +230,13 @@ class _ReservationAppState extends State<ReservationApp> {
     if(context.watch<ReservationProvider>().getDate() != null) {
       dateLabel = context.watch<ReservationProvider>().getDate().toString().substring(0, 10);
     }
-
+    print(["dayContent: ", context.watch<ReservationProvider>().getStep()]);
     return Visibility(
-      visible: step >= 2,
+      visible: context.watch<ReservationProvider>().getStep() >= 2,
       child: Panel(
         onTap: () {
-          if(step > 2){
-            setState(() {
-              step = 2;
-            });
+          if(context.watch<ReservationProvider>().getStep() > 2){
+            context.read<ReservationProvider>().setStep(2);
           }
         },
         child: Row(
@@ -258,31 +244,29 @@ class _ReservationAppState extends State<ReservationApp> {
             const PanelTitle(label: "Giorno"),
             const Spacer(),
             Visibility(
-              visible: step == 2,
+              visible: context.watch<ReservationProvider>().getStep() == 2,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(100, 25),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap
                 ),
                 onPressed: () async {
-                  final pickedDate = await showDatePicker(
+                  final DateTime? pickedDate = await showDatePicker(
                     context: context,
                     initialDate: DateTime.now(),
                     firstDate: DateTime.now().subtract(const Duration(days: 0)),
                     lastDate: DateTime(2100),
                   );
-                  if(pickedDate != null) {
+
+                  if(pickedDate != null && context.mounted) {
                     context.read<ReservationProvider>().setDate(pickedDate);
-                    setState(() {
-                      step = 3;
-                    });
                   }
                 },
                 child: const Text("Seleaizona giorno")
               ),
             ),
             Visibility(
-              visible: step >= 3,
+              visible: context.watch<ReservationProvider>().getStep() >= 3,
               child: PanelLabel(label: dateLabel),
             )
           ],
@@ -293,22 +277,20 @@ class _ReservationAppState extends State<ReservationApp> {
 
   Widget slotContent() {
     return Visibility(
-      visible: step >= 3,
+      visible: context.watch<ReservationProvider>().getStep() >= 3,
       child: Padding(
         padding: const EdgeInsets.only(top: 15),
         child: Panel(
           onTap: () {
-            setState(() {
-              step = 3;
-            });
+            context.read<ReservationProvider>().setStep(3);
           },
           child: Row(
             children: [
               const PanelTitle(label: "Orario"),
               const Spacer(),
               Visibility(
-                visible: step > 3,
-                child: PanelLabel(label: context.watch<ReservationProvider>().getSlot(context))
+                visible: context.watch<ReservationProvider>().getStep() > 3,
+                child: const PanelLabel(label: "test")
               ),
             ],
           ),
@@ -317,14 +299,15 @@ class _ReservationAppState extends State<ReservationApp> {
     );
   }
   Widget slotPicker() {
+
     return Visibility(
-      visible: step == 3,
+      visible: context.watch<ReservationProvider>().getStep() == 3,
       child: Padding(
         padding: const EdgeInsets.only(top: 15),
         child: GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: 8,
+          itemCount: context.watch<SlotProvider>().getSlots().length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 1.8,
@@ -337,12 +320,9 @@ class _ReservationAppState extends State<ReservationApp> {
                 context.read<ReservationProvider>().setSlot([
                   const TimeOfDay(hour: 9, minute: 30), const TimeOfDay(hour: 10, minute: 0)
                 ]);
-                setState(() {
-                  step = 4;
-                });
               },
               selected: index == context.watch<ReservationProvider>().getServiceSelected(),
-              child: Text("9:30 - 10:00"),
+              child: Text(context.watch<SlotProvider>().getSlots()[index].getFormattedString()),
             );
           },
         ),
@@ -352,7 +332,7 @@ class _ReservationAppState extends State<ReservationApp> {
 
   Widget confirmationButton() {
     return Visibility(
-      visible: step == 4,
+      visible: context.watch<ReservationProvider>().getStep() == 4,
       child: Padding(
         padding: const EdgeInsets.only(top: 30),
         child: ElevatedButton(

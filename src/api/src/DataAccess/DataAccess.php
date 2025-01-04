@@ -15,16 +15,51 @@ class DataAccess
         }
     }
 
-    public function get($table): array
+    public function get($table, $args = null): array
     {
         $this->connectPdo();
 
-        $result = [];
-        $stmt = $this->pdo->prepare("select * from ".$table);
-        $exec = $stmt->execute();
+        $columns = [];
+        $values = [];
+        if($args && is_array($args)) {
+            foreach ($args as $col => $arg) {
+                $operator = in_array($arg[0], ['>','<','!=','like']) ? $arg[0] : '=';
+                $columns[] = "$col $operator ?";
+                $values[] = $operator !== '=' ? ltrim($arg, '><!=like') : $arg;
+            }
+        }
+        $wherePart = $args ? 'where '.implode(' and ', $columns) : '';
 
-        if($exec) {
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $params = $values;
+
+        $result = [];
+        $sql = "select * from $table ".$wherePart;
+        $stmt = $this->pdo->prepare($sql);
+        try {
+            $exec = $stmt->execute($params);
+            if($exec) {
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+        }catch (\PDOException $E) {
+            $stmt->debugDumpParams();
+            //ToDo: log the exception
+        }
+
+        return $result;
+    }
+
+    public function customQuery(string $query): array
+    {
+        $result = [];
+
+        try{
+            $stmt = $this->pdo->prepare($query);
+            $exec = $stmt->execute();
+            if($exec) {
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+        }catch (\PDOException $E){
+            //ToDo: log the exception
         }
 
         return $result;
