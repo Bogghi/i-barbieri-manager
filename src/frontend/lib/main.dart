@@ -61,7 +61,7 @@ class App extends StatelessWidget {
       routes: {
         // '/': (context) => const Center(child: Text("this is the index page"),),
         '/reservation': (context) => ReservationApp(),
-        '/confirmReservation': (context) => const ConfirmReservationApp()
+        '/confirmReservation': (context) => const PopScope(canPop: false, child: ConfirmReservationApp())
       },
     );
   }
