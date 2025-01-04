@@ -3,10 +3,17 @@
 use App\controllers\BarberStoresController;
 use App\controllers\BarbersController;
 use App\controllers\BarberStoreServicesController;
+use Slim\Routing\RouteCollectorProxy;
 
 if(!isset($app)){ exit(); }
 
 $app->get("/barber-stores/list", BarberStoresController::class.":getStores");
-$app->get("/barber-stores/{id}/barbers/list", BarbersController::class.":getBarbers");
-$app->get("/barber-stores/{id}/services/list", BarberStoreServicesController::class.":getServices");
-$app->get("/barber-stores/{id}/day/{day}/{month}/{year}/barber/{barberId}/service/{serviceId}/open-reservation", BarberStoresController::class.":getOpenReservation");
+
+$app->group("/barber-stores/{id}", function(RouteCollectorProxy $group) {
+
+    $group->get("/barbers/list", BarbersController::class.":getBarbers");
+    $group->get("/services/list", BarberStoreServicesController::class.":getServices");
+    $group->get("/day/{day}/{month}/{year}/barber/{barberId}/service/{serviceId}/open-reservation", BarberStoresController::class.":getOpenReservation");
+    $group->post("/day/{day}/{month}/{year}/barber/{barberId}/service/{serviceId}/slot/{start}/{end}/book-reservation", BarberStoresController::class.":bookReservation");
+
+});

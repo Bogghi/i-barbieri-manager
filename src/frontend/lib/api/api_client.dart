@@ -14,7 +14,6 @@ abstract class ApiClient {
   static Future<Uri> _buildUrl(String path) async {
     return Uri.parse(await Constants.baseUrl()+path);
   }
-
   static Map<String,String> _parseHeaders(Map<String, dynamic> header) {
     final Map<String, String> parsedHeader = {};
 
@@ -24,7 +23,6 @@ abstract class ApiClient {
 
     return parsedHeader;
   }
-
   static Status _getStatusFromResponse(Response response) {
     if (response.statusCode == 200) {
       return Status.ok;
@@ -34,7 +32,6 @@ abstract class ApiClient {
       return Status.error;
     }
   }
-
   static Future<Response> getData(String path, Map<String, dynamic> headers) async {
     final url = await _buildUrl(path);
 
@@ -43,6 +40,15 @@ abstract class ApiClient {
     return await get(
       url,
       headers: _parseHeaders(headers)
+    );
+  }
+  static Future<Response> postData(String path, Map<String, dynamic> headers, Object body) async {
+    final url = await _buildUrl(path);
+
+    return await post(
+      url,
+      headers: _parseHeaders(headers),
+      body: body
     );
   }
 
@@ -134,5 +140,23 @@ abstract class ApiClient {
     }
 
     return result;
+  }
+
+  static Future<int?> bookAppointment(int barberStoreId, DateTime day, int barberId, int serviceId, String slotStart, String slotEnd, String phone) async {
+    int ?reservationId;
+
+    Response response = await postData(
+      "/barber-stores/$barberStoreId/day/${day.day}/${day.month}/${day.year}/barber/$barberId/service/$serviceId/slot/$slotStart/$slotEnd/book-reservation", {},
+      {'phone': phone}
+    );
+
+    final Status status = _getStatusFromResponse(response);
+    if(status == Status.ok) {
+      var data = jsonDecode(response.body);
+
+      reservationId = int.parse(data['reservationId'][0]);
+    }
+
+    return reservationId;
   }
 }

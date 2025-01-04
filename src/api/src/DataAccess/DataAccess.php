@@ -15,7 +15,7 @@ class DataAccess
         }
     }
 
-    public function get($table, $args = null): array
+    public function get(string $table, $args = null): array
     {
         $this->connectPdo();
 
@@ -60,6 +60,39 @@ class DataAccess
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
         }catch (\PDOException $E){
+            //ToDo: log the exception
+        }
+
+        return $result;
+    }
+
+    public function add(string $table, array $args = null): array
+    {
+        $this->connectPdo();
+
+        $result = [];
+        if(!$args){
+            return $result;
+        }
+
+        $base = "INSERT INTO $table ";
+        $cols = ['cols' => [], 'placeholders' => []];
+        $params = [];
+
+        foreach ($args as $col => $val) {
+            $cols['cols'][] = $col;
+            $cols['placeholders'][] = '?';
+            $params[] = $val;
+        }
+
+        try {
+            $sql = $base.'('.implode(',', $cols['cols']).') VALUES ('.implode(',', $cols['placeholders']).');';
+            $stmt = $this->pdo->prepare($sql);
+            $exec = $stmt->execute($params);
+            if($exec) {
+                $result[] = $this->pdo->lastInsertId();
+            }
+        }catch (\PDOException $E) {
             //ToDo: log the exception
         }
 

@@ -282,8 +282,7 @@ class ReservationApp extends StatelessWidget {
     String label = "";
 
     if(context.watch<ReservationProvider>().getSlot() != null) {
-      int slotId = context.watch<ReservationProvider>().getSlot()!;
-      label = context.watch<SlotProvider>().getSlots()[slotId].getFormattedString();
+      label = context.watch<ReservationProvider>().getSlot()!.getFormattedString();
     }
 
     return Visibility(
@@ -327,7 +326,8 @@ class ReservationApp extends StatelessWidget {
         itemBuilder: (context, index) {
           return Button(
             onPressed: () {
-              this.context.read<ReservationProvider>().setSlot(index);
+              Slot slot = this.context.read<SlotProvider>().getSlots()[index];
+              this.context.read<ReservationProvider>().setSlot(slot);
             },
             selected: index == this.context.watch<ReservationProvider>().getServiceSelected(),
             child: Text(this.context.watch<SlotProvider>().getSlots()[index].getFormattedString()),
@@ -400,7 +400,7 @@ class ReservationApp extends StatelessWidget {
                                 ),
                                 onPressed: (){
                                   this.context.read<ReservationProvider>().setNumber(numberController.text);
-                                  Navigator.pushNamed(context, '/confirmReservation');
+                                  handleBooking();
                                 },
                                 child: const Text(
                                   'Salva',
@@ -427,5 +427,12 @@ class ReservationApp extends StatelessWidget {
         ),
       )
     );
+  }
+
+  void handleBooking() async {
+    int? reservationId = await context.read<ReservationProvider>().book();
+    if(context.mounted && reservationId != null) {
+      Navigator.pushNamed(context, '/confirmReservation');
+    }
   }
 }

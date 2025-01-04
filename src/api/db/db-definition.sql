@@ -47,5 +47,6 @@ create table barber_store_reservations (
     barber_store_service_id int,
     day date not null,
     start_time time not null,
-    end_time time not null
+    end_time time not null,
+    phone text not null
 );

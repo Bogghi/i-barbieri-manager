@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
+import 'package:frontend/api/api_client.dart';
+import 'package:frontend/models/slot.dart';
+
 class ReservationProvider extends ChangeNotifier {
   int _reservationStep = 0;
   int _service = -1;
   int ?_barber;
   DateTime ?_date;
-  int ?_slot;
+  Slot ?_slot;
   String ?_number;
+
+  int ?_reservationId;
 
   ReservationProvider();
 
@@ -37,16 +42,23 @@ class ReservationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setSlot(int slot) {
+  void setSlot(Slot slot) {
     _slot = slot;
     _reservationStep = 4;
     notifyListeners();
   }
-  int? getSlot() => _slot;
+  Slot? getSlot() => _slot;
 
   void setNumber(String number) {
     _number = number;
     notifyListeners();
   }
   String? getNumber() => _number;
+
+  Future<int?> book() async {
+    int? reservationId = await ApiClient.bookAppointment(12, _date!, _barber!, _service, _slot!.startTime, _slot!.endTime, _number!);
+
+    return reservationId;
+  }
+  int? getReservationId() => _reservationId;
 }
