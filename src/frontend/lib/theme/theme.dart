@@ -186,7 +186,7 @@ class MaterialTheme {
       onTertiary: Color(4282068741),
       tertiaryContainer: Color(4283581977),
       onTertiaryContainer: Color(4294304167),
-      error: Color(4294948011),
+      error: Color.fromRGBO(255, 52, 52, 100),
       onError: Color(4285071365),
       errorContainer: Color(4287823882),
       onErrorContainer: Color(4294957782),
