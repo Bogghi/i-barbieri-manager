@@ -1,18 +1,19 @@
+// main dependecie
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:frontend/theme/theme.dart';
+import 'package:frontend/theme/util.dart';
+// providers
 import 'package:frontend/providers/reservation_provider.dart';
 import 'package:frontend/providers/settings_provider.dart';
 import 'package:frontend/providers/barber_store_services_provider.dart';
 import 'package:frontend/providers/barbers_provider.dart';
 import 'package:frontend/providers/barber_stores_provider.dart';
 import 'package:frontend/providers/slot_provider.dart';
-
-import 'package:frontend/theme/theme.dart';
-import 'package:frontend/theme/util.dart';
-import 'package:frontend/meta/navigation_service.dart';
+// pages
 import 'package:frontend/pages/reservation/reservation_app.dart';
 import 'package:frontend/pages/confirmReservation/confirm_reservation_app.dart';
+import 'package:frontend/pages/login/login_app.dart';
 
 void main() {
   runApp(const ProviderApp());
@@ -53,15 +54,15 @@ class App extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      navigatorKey: navigatorKey,
       title: 'Barber manager',
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
       // Temporary set to reservation to work on that specific ui section
       initialRoute: '/reservation',
       routes: {
         // '/': (context) => const Center(child: Text("this is the index page"),),
+        '/login': (context) => const LoginApp(),
         '/reservation': (context) => ReservationApp(),
-        '/confirmReservation': (context) => const PopScope(canPop: false, child: ConfirmReservationApp())
+        '/confirmReservation': (context) => const PopScope(canPop: false, child: ConfirmReservationApp()),
       },
     );
   }

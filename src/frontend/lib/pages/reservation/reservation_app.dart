@@ -3,7 +3,7 @@ import 'package:frontend/models/barber_store_service.dart';
 import 'package:frontend/providers/slot_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'package:frontend/meta/navigation_service.dart';
+//import 'package:frontend/meta/navigation_service.dart';
 import 'package:frontend/pages/reservation/widgets/button.dart';
 import 'package:frontend/pages/reservation/widgets/panel_label.dart';
 import 'package:frontend/pages/reservation/widgets/panel_title.dart';
@@ -80,14 +80,14 @@ class ReservationApp extends StatelessWidget {
         padding: const EdgeInsets.only(top: 15),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final services = navigatorKey.currentContext?.watch<BarberStoreServicesProvider>().getServices();
+            final services = this.context.watch<BarberStoreServicesProvider>().getServices();
             const double itemHeight = 100; // Example height of the content
             final double itemWidth = constraints.maxWidth / 2 - 15; // Example width of the content
             final double aspectRatio = itemWidth / itemHeight;
 
             return GridView.builder(
               shrinkWrap: true,
-              itemCount: services?.length,
+              itemCount: services.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 15,
@@ -95,7 +95,7 @@ class ReservationApp extends StatelessWidget {
                 childAspectRatio: aspectRatio,
               ),
               itemBuilder: (context, index) {
-                BarberStoreService? service = services?[index];
+                BarberStoreService? service = services[index];
                 return Button(
                   onPressed: () {
                     this.context.read<ReservationProvider>().setService(service.barberServiceId);
