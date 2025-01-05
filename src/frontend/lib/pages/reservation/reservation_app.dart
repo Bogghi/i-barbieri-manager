@@ -3,8 +3,7 @@ import 'package:frontend/models/barber_store_service.dart';
 import 'package:frontend/providers/slot_provider.dart';
 import 'package:provider/provider.dart';
 
-//import 'package:frontend/meta/navigation_service.dart';
-import 'package:frontend/pages/reservation/widgets/button.dart';
+import 'package:frontend/pages/shared/button.dart';
 import 'package:frontend/pages/reservation/widgets/panel_label.dart';
 import 'package:frontend/pages/reservation/widgets/panel_title.dart';
 import 'package:frontend/providers/barbers_provider.dart';
@@ -428,7 +427,6 @@ class ReservationApp extends StatelessWidget {
       )
     );
   }
-
   void handleBooking() async {
     int? reservationId = await context.read<ReservationProvider>().book();
     if(context.mounted && reservationId != null) {

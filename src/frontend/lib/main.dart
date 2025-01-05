@@ -1,4 +1,4 @@
-// main dependecie
+// main dependencies
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/theme/theme.dart';
@@ -57,10 +57,10 @@ class App extends StatelessWidget {
       title: 'Barber manager',
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
       // Temporary set to reservation to work on that specific ui section
-      initialRoute: '/reservation',
+      initialRoute: '/login',
       routes: {
         // '/': (context) => const Center(child: Text("this is the index page"),),
-        '/login': (context) => const LoginApp(),
+        '/login': (context) => LoginApp(),
         '/reservation': (context) => ReservationApp(),
         '/confirmReservation': (context) => const PopScope(canPop: false, child: ConfirmReservationApp()),
       },
