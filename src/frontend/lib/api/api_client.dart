@@ -1,62 +1,18 @@
 import 'dart:convert';
+import 'package:http/http.dart';
 
 import 'package:frontend/models/barber.dart';
 import 'package:frontend/models/barber_store.dart';
 import 'package:frontend/models/barber_store_service.dart';
 import 'package:frontend/models/slot.dart';
-import 'package:http/http.dart';
-import 'package:frontend/meta/constants.dart';
-
-enum Status { ok, forbidden, error }
+import 'package:frontend/api/base_client_utility.dart';
 
 abstract class ApiClient {
-
-  static Future<Uri> _buildUrl(String path) async {
-    return Uri.parse(await Constants.baseUrl()+path);
-  }
-  static Map<String,String> _parseHeaders(Map<String, dynamic> header) {
-    final Map<String, String> parsedHeader = {};
-
-    header.forEach((key, value) {
-      parsedHeader[key] = value.toString();
-    });
-
-    return parsedHeader;
-  }
-  static Status _getStatusFromResponse(Response response) {
-    if (response.statusCode == 200) {
-      return Status.ok;
-    } else if (response.statusCode == 403) {
-      return Status.forbidden;
-    } else {
-      return Status.error;
-    }
-  }
-  static Future<Response> getData(String path, Map<String, dynamic> headers) async {
-    final url = await _buildUrl(path);
-
-    //ToDo: implement authentication
-
-    return await get(
-      url,
-      headers: _parseHeaders(headers)
-    );
-  }
-  static Future<Response> postData(String path, Map<String, dynamic> headers, Object body) async {
-    final url = await _buildUrl(path);
-
-    return await post(
-      url,
-      headers: _parseHeaders(headers),
-      body: body
-    );
-  }
-
   static Future<List<BarberStore>> getBarberStore() async {
     final List<BarberStore> result = [];
-    Response response = await getData('/barber-stores/list', {});
+    Response response = await BaseClientUtility.getData('/barber-stores/list', {});
 
-    final Status status = _getStatusFromResponse(response);
+    final Status status = BaseClientUtility.getStatusFromResponse(response);
     if(status == Status.ok) {
       final Map<String, dynamic> parsedBody = jsonDecode(response.body);
 
@@ -76,9 +32,9 @@ abstract class ApiClient {
 
   static Future<List<Barber>> getBarbers(int barberStoreId) async {
     final List<Barber> result = [];
-    Response response = await getData("/barber-stores/$barberStoreId/barbers/list", {});
+    Response response = await BaseClientUtility.getData("/barber-stores/$barberStoreId/barbers/list", {});
 
-    final Status status = _getStatusFromResponse(response);
+    final Status status = BaseClientUtility.getStatusFromResponse(response);
     if(status == Status.ok) {
       final Map<String, dynamic> parsedBody = jsonDecode(response.body);
 
@@ -98,9 +54,9 @@ abstract class ApiClient {
 
   static Future<List<BarberStoreService>> getServices(int barberStoreId) async {
     final List<BarberStoreService> result = [];
-    Response response = await getData("/barber-stores/$barberStoreId/services/list", {});
+    Response response = await BaseClientUtility.getData("/barber-stores/$barberStoreId/services/list", {});
 
-    final Status status = _getStatusFromResponse(response);
+    final Status status = BaseClientUtility.getStatusFromResponse(response);
     if(status == Status.ok) {
       final Map<String, dynamic> parsedBody = jsonDecode(response.body);
 
@@ -121,11 +77,11 @@ abstract class ApiClient {
 
   static Future<List<Slot>> getSlots(int barberStoreId, DateTime day, int barberId, int serviceId) async {
     final List<Slot> result = [];
-    Response response = await getData(
+    Response response = await BaseClientUtility.getData(
       "/barber-stores/$barberStoreId/day/${day.day}/${day.month}/${day.year}/barber/$barberId/service/$serviceId/open-reservation", {},
     );
     
-    final Status status = _getStatusFromResponse(response);
+    final Status status = BaseClientUtility.getStatusFromResponse(response);
     if(status == Status.ok) {
       final Map<String, dynamic> parsedBody = jsonDecode(response.body);
       
@@ -145,12 +101,12 @@ abstract class ApiClient {
   static Future<int?> bookAppointment(int barberStoreId, DateTime day, int barberId, int serviceId, String slotStart, String slotEnd, String phone) async {
     int ?reservationId;
 
-    Response response = await postData(
+    Response response = await BaseClientUtility.postData(
       "/barber-stores/$barberStoreId/day/${day.day}/${day.month}/${day.year}/barber/$barberId/service/$serviceId/slot/$slotStart/$slotEnd/book-reservation", {},
       {'phone': phone}
     );
 
-    final Status status = _getStatusFromResponse(response);
+    final Status status = BaseClientUtility.getStatusFromResponse(response);
     if(status == Status.ok) {
       var data = jsonDecode(response.body);
 

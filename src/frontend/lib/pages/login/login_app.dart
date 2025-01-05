@@ -27,8 +27,10 @@ class LoginApp extends StatelessWidget {
               ),
               TextField(
                 controller: passwordController,
-                decoration: const InputDecoration(
-                    labelText: 'Password'
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  suffix: IconButton(onPressed: (){}, icon: const Icon(Icons.remove_red_eye))
                 ),
               ),
               const SizedBox(height: 30,),

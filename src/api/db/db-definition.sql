@@ -50,3 +50,10 @@ create table barber_store_reservations (
     end_time time not null,
     phone text not null
 );
+
+create table barber_user (
+    barber_user_id int primary key auto_increment,
+    barber_id int,
+    email text,
+    password text
+);
