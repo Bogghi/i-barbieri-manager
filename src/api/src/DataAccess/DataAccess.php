@@ -66,7 +66,7 @@ class DataAccess
         return $result;
     }
 
-    public function add(string $table, array $args = null): array
+    public function add(string $table, ?array $args = null): array
     {
         $this->connectPdo();
 

@@ -10,6 +10,7 @@ import 'package:frontend/providers/barber_store_services_provider.dart';
 import 'package:frontend/providers/barbers_provider.dart';
 import 'package:frontend/providers/barber_stores_provider.dart';
 import 'package:frontend/providers/slot_provider.dart';
+import 'package:frontend/providers/auth_provider.dart';
 // pages
 import 'package:frontend/pages/reservation/reservation_app.dart';
 import 'package:frontend/pages/confirmReservation/confirm_reservation_app.dart';
@@ -31,7 +32,8 @@ class ProviderApp extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => BarberStoreServicesProvider()),
           ChangeNotifierProvider(create: (context) => BarbersProvider()),
           ChangeNotifierProvider(create: (context) => BarberStoresProvider()),
-          ChangeNotifierProvider(create: (context) => SlotProvider())
+          ChangeNotifierProvider(create: (context) => SlotProvider()),
+          ChangeNotifierProvider(create: (context) => AuthProvider()),
         ],
         child: const App()
     );
@@ -48,10 +50,6 @@ class App extends StatelessWidget {
     TextTheme textTheme = createTextTheme(context, "Abel", "ABeeZee");
     MaterialTheme theme = MaterialTheme(textTheme);
 
-    context.read<BarberStoresProvider>().fetch();
-    context.read<BarbersProvider>().fetch(12);
-    context.read<BarberStoreServicesProvider>().fetch(12);
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Barber manager',
@@ -61,7 +59,12 @@ class App extends StatelessWidget {
       routes: {
         // '/': (context) => const Center(child: Text("this is the index page"),),
         '/login': (context) => LoginApp(),
-        '/reservation': (context) => ReservationApp(),
+        '/reservation': (context) {
+          context.read<BarberStoresProvider>().fetch();
+          context.read<BarbersProvider>().fetch(12);
+          context.read<BarberStoreServicesProvider>().fetch(12);
+          return ReservationApp();
+        },
         '/confirmReservation': (context) => const PopScope(canPop: false, child: ConfirmReservationApp()),
       },
     );

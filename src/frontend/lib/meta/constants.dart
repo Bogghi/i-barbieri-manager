@@ -5,4 +5,8 @@ abstract class Constants {
     await dotenv.load(fileName: '.env');
     return dotenv.env['BASE_URL'] ?? '';
   }
+  static Future<String> salt() async {
+    await dotenv.load(fileName: '.env');
+    return dotenv.env['SALT'] ?? '';
+  }
 }

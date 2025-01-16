@@ -4,11 +4,13 @@ require_once 'src/DataAccess/DataAccess.php';
 require_once 'src/controllers/BarberStoresController.php';
 require_once 'src/controllers/BarberStoreServicesController.php';
 require_once 'src/controllers/BarbersController.php';
+require_once 'src/controllers/AuthController.php';
 
 use App\DataAccess\DataAccess;
 use App\controllers\BarberStoresController;
 use App\controllers\BarbersController;
 use App\controllers\BarberStoreServicesController;
+use App\controllers\AuthController;
 
 if(!isset($app)){
     header("location: /");
@@ -27,4 +29,7 @@ $container["App\controllers\BarbersController"] = function($c) {
 };
 $container["App\controllers\BarberStoreServicesController"] = function($c) {
     return new BarberStoreServicesController();
+};
+$container['App\controllers\AuthController'] = function($c) {
+    return new AuthController();
 };
