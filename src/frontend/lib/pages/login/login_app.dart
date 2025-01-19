@@ -23,35 +23,18 @@ class LoginApp extends StatelessWidget {
               const Text("Login", style: TextStyle(fontSize: 25)),
               TextField(
                 controller: usernameController,
-                decoration: InputDecoration(
-                  labelText: 'User',
-                  error: context.watch<AuthProvider>().usernameError() ? Row(children: [
-                    Icon(Icons.error, color: Theme.of(context).colorScheme.error),
-                    const SizedBox(width: 2),
-                    Text("Username non valido", style: TextStyle(color: Theme.of(context).colorScheme.error)),
-                  ],) : null,
-                  errorStyle: TextStyle(color: Theme.of(context).colorScheme.error)
-                ),
+                decoration: const InputDecoration(labelText: 'User'),
               ),
               TextField(
                 controller: passwordController,
                 obscureText: !context.watch<AuthProvider>().passwordVisible(),
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  error: context.watch<AuthProvider>().usernameError() ? Row(children: [
-                    Icon(Icons.error, color: Theme.of(context).colorScheme.error),
-                    const SizedBox(width: 2),
-                    Text("Password non valida", style: TextStyle(color: Theme.of(context).colorScheme.error)),
-                  ],) : null,
-                  errorStyle: TextStyle(color: Theme.of(context).colorScheme.error),
                   suffix: MouseRegion(
                     cursor: SystemMouseCursors.click,
                     child: GestureDetector(
                       onTapDown: (tapDownDetails) {
-                        context.read<AuthProvider>().setPasswordVisible(true);
-                      },
-                      onTapUp: (tapDownDetails) {
-                        context.read<AuthProvider>().setPasswordVisible(false);
+                        context.read<AuthProvider>().togglePasswordVisibility();
                       },
                       child: context.read<AuthProvider>().passwordVisible() ?
                         const Icon(Icons.remove_red_eye) : const Icon(Icons.remove_red_eye_outlined),
@@ -60,16 +43,27 @@ class LoginApp extends StatelessWidget {
                 )
               ),
               const SizedBox(height: 30,),
+              Visibility(
+                visible: context.watch<AuthProvider>().credentialError(),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.errorContainer,
+                    borderRadius: BorderRadius.circular(15)
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text(
+                      style: TextStyle(fontSize: 22, color: Theme.of(context).colorScheme.error),
+                      "Le credenziali inserite non sono valide"
+                    ),
+                  ),
+                )
+              ),
+              const Visibility(child: SizedBox(height: 30,)),
               ConfirmationButton(
                 label: 'Accedi',
                 onPressed: (){
-                  bool correctFields = usernameController.text.isEmpty && passwordController.text.isEmpty;
-                  context.read<AuthProvider>().setUsernameError(usernameController.text.isEmpty);
-                  context.read<AuthProvider>().setPasswordError(passwordController.text.isEmpty);
-
-                  if(!correctFields) {
-                    context.read<AuthProvider>().verifyCredentials(usernameController.text, passwordController.text);
-                  }
+                  context.read<AuthProvider>().verifyCredentials(usernameController.text, passwordController.text, context);
                 }
               ),
             ],

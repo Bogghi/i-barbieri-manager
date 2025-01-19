@@ -3,30 +3,31 @@ import 'package:frontend/api/auth_client.dart';
 
 class AuthProvider extends ChangeNotifier {
   bool _passwordVisible = false;
-  bool _usernameError = false;
-  bool _passwordError = false;
-  String? _jwtToken = null;
+  bool _credentialError = false;
+  String? _jwtToken;
 
   bool passwordVisible() => _passwordVisible;
-  void setPasswordVisible(bool status) {
-    _passwordVisible = status;
+  void togglePasswordVisibility() {
+    _passwordVisible = !_passwordVisible;
     notifyListeners();
   }
 
-  bool usernameError() => _usernameError;
-  void setUsernameError(bool status) {
-    _usernameError = status;
-    notifyListeners();
-  }
+  bool credentialError() => _credentialError;
+  String? jwtToken() => _jwtToken;
+  Future<void> verifyCredentials(String email, String password, BuildContext context) async {
 
-  bool passwordError() => _passwordError;
-  void setPasswordError(bool status) {
-    _passwordError = status;
-    notifyListeners();
-  }
+    if(email.isEmpty || password.isEmpty){
+      _credentialError = true;
+    }
+    else {
+      _jwtToken = await AuthClient.login(email, password);
 
-  Future<void> verifyCredentials(String email, String password) async {
-    _jwtToken = await AuthClient.login(email, password);
+      if(_jwtToken != null && context.mounted) {
+        Navigator.pushReplacementNamed(context, '/console');
+      }else {
+        _credentialError = true;
+      }
+    }
     notifyListeners();
   }
 }

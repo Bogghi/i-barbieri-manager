@@ -57,7 +57,7 @@ class App extends StatelessWidget {
       // Temporary set to reservation to work on that specific ui section
       initialRoute: '/login',
       routes: {
-        // '/': (context) => const Center(child: Text("this is the index page"),),
+        '/console': (context) => const Scaffold(body: Center(child: Text("this is the index page"),)),
         '/login': (context) => LoginApp(),
         '/reservation': (context) {
           context.read<BarberStoresProvider>().fetch();

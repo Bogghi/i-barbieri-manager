@@ -17,7 +17,6 @@ abstract class AuthClient {
     }else {
       jwtToken = null;
     }
-    print(jwtToken);
     
     return jwtToken;
   }
