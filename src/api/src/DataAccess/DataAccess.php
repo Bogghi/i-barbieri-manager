@@ -23,9 +23,10 @@ class DataAccess
         $values = [];
         if($args && is_array($args)) {
             foreach ($args as $col => $arg) {
-                $operator = in_array($arg[0], ['>','<','!=','like']) ? $arg[0] : '=';
+                $argStr = "$arg";
+                $operator = in_array($argStr[0], ['>','<','!=','like']) ? $argStr[0] : '=';
                 $columns[] = "$col $operator ?";
-                $values[] = $operator !== '=' ? ltrim($arg, '><!=like') : $arg;
+                $values[] = $operator !== '=' ? ltrim($argStr, '><!=like') : $argStr;
             }
         }
         $wherePart = $args ? 'where '.implode(' and ', $columns) : '';
@@ -93,6 +94,7 @@ class DataAccess
                 $result[] = $this->pdo->lastInsertId();
             }
         }catch (\PDOException $E) {
+            var_dump($E->getMessage());
             //ToDo: log the exception
         }
 
