@@ -6,6 +6,10 @@ use PDO;
 
 class DataAccess
 {
+    const array NOT_AUTHORIZED_MESSAGE = ['message' => 'You are not authorized to access this resource.'];
+
+    public int $status = 200;
+
     protected ?PDO $pdo = null;
 
     public function connectPdo(): void

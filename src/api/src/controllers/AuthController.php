@@ -28,22 +28,39 @@ class AuthController extends DataAccess
 
     public function login(Request $request, Response $response, $args): Response
     {
-        $result = ['token' => null];
+        $result = [];
         $body = $request->getParsedBody();
 
         $userData = $this->get(table: 'barber_user', args: ['email' => $body['email']]);
 
         if($userData && password_verify($body['password'], $userData[0]['password'])) {
-            $result['token'] = $this->generateToken([
-                'email' => $userData[0]['email'],
-                'password' => $userData[0]['password'],
-                'eat' => strtotime('today +24h')
-            ]);
+            $barberUserId = $userData[0]['barber_user_id'];
+
+            $barberUserTokens = $this->get("jwt_tokens", ['barber_user_id' => $barberUserId]);
+            if(count($barberUserTokens) > 0 && strtotime($barberUserTokens[0]['expire_date']) > strtotime('now')){
+                $result['token'] = $barberUserTokens[0]['jwt_token'];
+            }
+            else {
+                $expireDateTimestamp = strtotime('+24 hours');
+                $expireDateFormatted = date('Y-m-d H:i:s', $expireDateTimestamp);
+                $token = $this->generateToken([
+                    'email' => $userData[0]['email'],
+                    'password' => $userData[0]['password'],
+                    'eat' => $expireDateTimestamp
+                ]);
+
+                $this->add('jwt_tokens', ['jwt_token' => $token, 'barber_user_id' => $barberUserId, 'expire_date' => $expireDateFormatted]);
+
+                $result['token'] = $token;
+            }
+        }else {
+            $this->status = 403;
+            $result = self::NOT_AUTHORIZED_MESSAGE;
         }
 
         $response->getBody()->write(json_encode($result));
         return $response
-            ->withStatus($result['token'] !== null ? 200 : 403)
+            ->withStatus($this->status)
             ->withHeader('Content-type', 'application/json');
     }
 }

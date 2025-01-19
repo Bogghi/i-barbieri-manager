@@ -57,3 +57,9 @@ create table barber_user (
     email text,
     password text
 );
+
+create table jwt_tokens (
+    jwt_token text,
+    barber_user_id int,
+    expire_date datetime
+);
