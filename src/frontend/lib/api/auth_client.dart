@@ -20,4 +20,22 @@ abstract class AuthClient {
     
     return jwtToken;
   }
+
+  static Future<bool> sigup(String email, String password) async {
+    final bool sigupStatus;
+    Response response = await BaseClientUtility.postData(
+      '/barbers/sigup', {}, {'email': email, 'password': password}
+    );
+
+    final Status status = BaseClientUtility.getStatusFromResponse(response);
+    if(status == Status.ok) {
+      var data = jsonDecode(response.body);
+      sigupStatus = data.containsKey('result') && data['result'] == 'OK' ? true : false;
+    }
+    else {
+      sigupStatus = false;
+    }
+
+    return sigupStatus;
+  }
 }

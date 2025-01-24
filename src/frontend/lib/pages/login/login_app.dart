@@ -66,6 +66,13 @@ class LoginApp extends StatelessWidget {
                   context.read<AuthProvider>().verifyCredentials(usernameController.text, passwordController.text, context);
                 }
               ),
+              const SizedBox(height: 30,),
+              ConfirmationButton(
+                label: 'Registrati',
+                onPressed: (){
+                  context.read<AuthProvider>().verifyCredentials(usernameController.text, passwordController.text, context);
+                }
+              ),
             ],
           ),
         ),
