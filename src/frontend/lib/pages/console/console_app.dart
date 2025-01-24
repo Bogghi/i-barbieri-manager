@@ -5,6 +5,28 @@ class ConsoleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text("this is the index page"),));
+    return Scaffold(
+      body: Row(
+        children: [
+          // Left Side - AppBar
+          AppBar(
+            title: Text('AppBar'),
+            centerTitle: true,
+            automaticallyImplyLeading: false,
+          ),
+          // Right Side - Playground
+          Expanded(
+            child: Container(
+              child: Center(
+                child: Text(
+                  'Playground',
+                  style: TextStyle(fontSize: 24),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
