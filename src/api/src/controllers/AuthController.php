@@ -31,7 +31,7 @@ class AuthController extends DataAccess
         $result = [];
         $body = $request->getParsedBody();
 
-        $userData = $this->get(table: 'barber_user', args: ['email' => $body['email']]);
+        $userData = $this->get(table: 'barber_users', args: ['email' => $body['email']]);
 
         if($userData && password_verify($body['password'], $userData[0]['password'])) {
             $barberUserId = $userData[0]['barber_user_id'];
@@ -59,6 +59,37 @@ class AuthController extends DataAccess
         }
 
         $response->getBody()->write(json_encode($result));
+        return $response
+            ->withStatus($this->status)
+            ->withHeader('Content-type', 'application/json');
+    }
+
+    public function signup(Request $request, Response $response, $args): Response
+    {
+        $requestBody = $request->getParsedBody();
+
+        if(isset($requestBody['email']) && isset($requestBody['password'])) {
+
+            $userData = $this->get(table: 'barber_users', args: ['email' => $requestBody['email']]);
+
+            if(!$userData) {
+                $password = password_hash($requestBody['password'], PASSWORD_DEFAULT);
+
+                $this->add('barber_users', ['email' => $requestBody['email'], 'password' => $password]);
+                $body = ['result' => 'OK'];
+
+            }
+            else {
+                $body = self::NOT_AUTHORIZED_MESSAGE;
+            }
+
+        }
+        else {
+            $this->status = 403;
+            $body = self::NOT_AUTHORIZED_MESSAGE;
+        }
+
+        $response->getBody()->write(json_encode($body));
         return $response
             ->withStatus($this->status)
             ->withHeader('Content-type', 'application/json');

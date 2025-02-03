@@ -51,7 +51,7 @@ create table barber_store_reservations (
     phone text not null
 );
 
-create table barber_user (
+create table barber_users (
     barber_user_id int primary key auto_increment,
     barber_id int,
     email text,

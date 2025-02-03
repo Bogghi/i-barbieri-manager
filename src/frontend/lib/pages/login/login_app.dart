@@ -54,7 +54,7 @@ class LoginApp extends StatelessWidget {
                     padding: const EdgeInsets.all(12.0),
                     child: Text(
                       style: TextStyle(fontSize: 22, color: Theme.of(context).colorScheme.error),
-                      "Le credenziali inserite non sono valide"
+                      context.watch<AuthProvider>().errorMsg() ?? ''
                     ),
                   ),
                 )
@@ -63,14 +63,18 @@ class LoginApp extends StatelessWidget {
               ConfirmationButton(
                 label: 'Accedi',
                 onPressed: (){
-                  context.read<AuthProvider>().verifyCredentials(usernameController.text, passwordController.text, context);
+                  context
+                      .read<AuthProvider>()
+                      .verifyCredentials(usernameController.text, passwordController.text, context);
                 }
               ),
               const SizedBox(height: 30,),
               ConfirmationButton(
                 label: 'Registrati',
                 onPressed: (){
-                  context.read<AuthProvider>().verifyCredentials(usernameController.text, passwordController.text, context);
+                  context
+                      .read<AuthProvider>()
+                      .signup(usernameController.text, passwordController.text, context);
                 }
               ),
             ],

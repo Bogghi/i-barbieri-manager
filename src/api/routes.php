@@ -26,3 +26,4 @@ $app->group("/barber-stores/{id}", function(RouteCollectorProxy $group) {
 });
 
 $app->post("/barbers/login", AuthController::class.":login");
+$app->post("/barbers/signup", AuthController::class.":signup");
