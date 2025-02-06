@@ -9,13 +9,6 @@
 /src/frontend/.history
 /src/frontend/.svn
 /src/frontend/migrate_working_dir
-src/frontend/build
-
-# IntelliJ related
-/src/frontend/*.iml
-/src/frontend/*.ipr
-/src/frontend/*.iws
-/src/frontend/.idea
 /src/frontend/.env
 
 # The .vscode folder contains launch configuration and tasks you configure in
@@ -31,7 +24,7 @@ src/frontend/build
 /src/frontend/.flutter-plugins-dependencies
 /src/frontend/.pub-cache
 /src/frontend/.pub/
-/src/frontend//build/
+/src/frontend/build
 
 # Symbolication related
 /src/frontend/app.*.symbols
@@ -45,9 +38,9 @@ src/frontend/build
 /src/frontend/android/app/release
 
 # API ignore
-
-/src/api/.idea
 /src/api/.vscode
 /src/api/env.php
 /src/api/vendor
 /src/api/package.xml
+
+/.idea
