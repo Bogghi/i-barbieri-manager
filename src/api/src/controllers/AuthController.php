@@ -58,9 +58,7 @@ class AuthController extends DataAccess
                     ]
                 );
 
-                session_start();
                 $result['token'] = $token;
-                $result['session_data'] = $_SESSION;
             }
         }else {
             $this->status = 403;
