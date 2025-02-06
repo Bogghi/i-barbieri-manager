@@ -49,9 +49,18 @@ class AuthController extends DataAccess
                     'eat' => $expireDateTimestamp
                 ]);
 
-                $this->add('jwt_tokens', ['jwt_token' => $token, 'barber_user_id' => $barberUserId, 'expire_date' => $expireDateFormatted]);
+                $this->add(
+                    'jwt_tokens',
+                    [
+                        'jwt_token' => $token,
+                        'barber_user_id' => $barberUserId,
+                        'expire_date' => $expireDateFormatted
+                    ]
+                );
 
+                session_start();
                 $result['token'] = $token;
+                $result['session_data'] = $_SESSION;
             }
         }else {
             $this->status = 403;

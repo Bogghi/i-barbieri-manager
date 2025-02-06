@@ -9,11 +9,7 @@ class ConsoleApp extends StatelessWidget {
       body: Row(
         children: [
           // Left Side - AppBar
-          AppBar(
-            title: Text('AppBar'),
-            centerTitle: true,
-            automaticallyImplyLeading: false,
-          ),
+
           // Right Side - Playground
           Expanded(
             child: Container(
