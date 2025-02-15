@@ -62,8 +62,8 @@ class LoginApp extends StatelessWidget {
               const Visibility(child: SizedBox(height: 30,)),
               ConfirmationButton(
                 label: 'Accedi',
-                onPressed: (){
-                  context
+                onPressed: () async {
+                  await context
                       .read<AuthProvider>()
                       .verifyCredentials(usernameController.text, passwordController.text, context);
                 }

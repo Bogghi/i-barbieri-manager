@@ -58,8 +58,13 @@ create table barber_users (
     password text
 );
 
-create table jwt_tokens (
-    jwt_token text,
+create table oauth_tokens (
+    oauth_token text,
+    barber_user_id int,
+    expire_date datetime
+);
+create table refresh_tokens (
+    refresh_token text,
     barber_user_id int,
     expire_date datetime
 );

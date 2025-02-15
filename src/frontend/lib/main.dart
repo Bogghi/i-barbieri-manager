@@ -27,16 +27,16 @@ class ProviderApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => ReservationProvider()),
-          ChangeNotifierProvider(create: (context) => SettingsProvider()),
-          ChangeNotifierProvider(create: (context) => BarberStoreServicesProvider()),
-          ChangeNotifierProvider(create: (context) => BarbersProvider()),
-          ChangeNotifierProvider(create: (context) => BarberStoresProvider()),
-          ChangeNotifierProvider(create: (context) => SlotProvider()),
-          ChangeNotifierProvider(create: (context) => AuthProvider()),
-        ],
-        child: const App()
+      providers: [
+        ChangeNotifierProvider(create: (context) => ReservationProvider()),
+        ChangeNotifierProvider(create: (context) => SettingsProvider()),
+        ChangeNotifierProvider(create: (context) => BarberStoreServicesProvider()),
+        ChangeNotifierProvider(create: (context) => BarbersProvider()),
+        ChangeNotifierProvider(create: (context) => BarberStoresProvider()),
+        ChangeNotifierProvider(create: (context) => SlotProvider()),
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+      ],
+      child: const App()
     );
   }
 }

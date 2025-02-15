@@ -1,12 +1,13 @@
 <?php
 
 require_once 'src/DataAccess/DataAccess.php';
+require_once 'src/controllers/BaseController.php';
 require_once 'src/controllers/BarberStoresController.php';
 require_once 'src/controllers/BarberStoreServicesController.php';
-require_once 'src/controllers/BarbersController.php';
 require_once 'src/controllers/AuthController.php';
 
 use App\DataAccess\DataAccess;
+use App\controllers\BaseController;
 use App\controllers\BarberStoresController;
 use App\controllers\BarbersController;
 use App\controllers\BarberStoreServicesController;

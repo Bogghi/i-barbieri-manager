@@ -4,8 +4,8 @@ import 'package:http/http.dart';
 import 'package:frontend/api/base_client_utility.dart';
 
 abstract class AuthClient {
-  static Future<String?> login(String email, String password) async {
-    final String? jwtToken;
+  static Future<Map<String, dynamic>> login(String email, String password) async {
+    Map<String, dynamic> tokens = {'oauth_token': null, 'refresh_token': null};
     Response response = await BaseClientUtility.postData(
       '/barbers/login', {}, {'email': email, 'password': password}
     );
@@ -13,12 +13,15 @@ abstract class AuthClient {
     final Status status = BaseClientUtility.getStatusFromResponse(response);
     if(status == Status.ok) {
       var data = jsonDecode(response.body);
-      jwtToken = data['token'];
-    }else {
-      jwtToken = null;
+      if(data.containsKey('oauth_token')) {
+        tokens['oauth_token'] = data['oauth_token'];
+      }
+      if(data.containsKey('refresh_token')) {
+        tokens['refresh_token'] = data['refresh_token'];
+      }
     }
     
-    return jwtToken;
+    return tokens;
   }
 
   static Future<bool> signup(String email, String password) async {

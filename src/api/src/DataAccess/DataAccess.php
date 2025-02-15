@@ -2,13 +2,13 @@
 
 namespace App\DataAccess;
 
+require_once 'src/controllers/BaseController.php';
+
 use PDO;
+use App\controllers\BaseController;
 
-class DataAccess
+class DataAccess extends BaseController
 {
-    const array NOT_AUTHORIZED_MESSAGE = ['message' => 'You are not authorized to access this resource.'];
-
-    public int $status = 200;
 
     protected ?PDO $pdo = null;
 
@@ -46,8 +46,7 @@ class DataAccess
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
         }catch (\PDOException $E) {
-            $stmt->debugDumpParams();
-            //ToDo: log the exception
+            $this->status = 500;
         }
 
         return $result;
@@ -65,7 +64,7 @@ class DataAccess
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
         }catch (\PDOException $E){
-            //ToDo: log the exception
+            $this->status = 500;
         }
 
         return $result;
@@ -98,7 +97,6 @@ class DataAccess
                 $result[] = $this->pdo->lastInsertId();
             }
         }catch (\PDOException $E) {
-            var_dump($E->getMessage());
             //ToDo: log the exception
         }
 

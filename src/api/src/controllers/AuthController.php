@@ -43,37 +43,53 @@ class AuthController extends DataAccess
             else {
                 $expireDateTimestamp = strtotime('+24 hours');
                 $expireDateFormatted = date('Y-m-d H:i:s', $expireDateTimestamp);
-                $token = $this->generateToken([
+                $oAuthToken = $this->generateToken([
                     'email' => $userData[0]['email'],
                     'password' => $userData[0]['password'],
                     'eat' => $expireDateTimestamp
                 ]);
+                $refreshToken = $this->generateRefreshToken(email: $userData[0]['email'], password: $userData[0]['password']);
 
-                $this->add(
-                    'jwt_tokens',
-                    [
-                        'jwt_token' => $token,
-                        'barber_user_id' => $barberUserId,
-                        'expire_date' => $expireDateFormatted
-                    ]
-                );
 
-                $result['token'] = $token;
+                try {
+                    $this->add(
+                        'oauth_tokens',
+                        [
+                            'oauth_token' => $oAuthToken,
+                            'refresh_token' => $refreshToken,
+                            'barber_user_id' => $barberUserId,
+                            'expire_date' => $expireDateFormatted
+                        ]
+                    );
+                    $result['token'] = $oAuthToken;
+                }
+                catch (\Exception $e) {
+                    $this->status = 403;
+                    $result = self::NOT_AUTHORIZED_MESSAGE;
+                }
             }
         }else {
             $this->status = 403;
             $result = self::NOT_AUTHORIZED_MESSAGE;
         }
 
-        $response->getBody()->write(json_encode($result));
-        return $response
-            ->withStatus($this->status)
-            ->withHeader('Content-type', 'application/json');
+
+        return $this->prepareResponse($response, json_encode($result));
+    }
+
+    private function generateRefreshToken(string $email, String $password): string {
+        return $this->generateToken([
+            'email' => $email,
+            'password' => $password,
+            'eat' => strtotime('+1 month')
+        ]);
     }
 
     public function signup(Request $request, Response $response, $args): Response
     {
         $requestBody = $request->getParsedBody();
+
+//        var_dump($requestBody);
 
         if(isset($requestBody['email']) && isset($requestBody['password'])) {
 
@@ -96,9 +112,7 @@ class AuthController extends DataAccess
             $body = self::NOT_AUTHORIZED_MESSAGE;
         }
 
-        $response->getBody()->write(json_encode($body));
-        return $response
-            ->withStatus($this->status)
-            ->withHeader('Content-type', 'application/json');
+
+        return $this->prepareResponse($response, $body);
     }
 }
