@@ -59,12 +59,14 @@ create table barber_users (
 );
 
 create table oauth_tokens (
-    oauth_token text,
+    oauth_token_id int primary key auto_increment,
+    oauth_token text not null,
     barber_user_id int,
     expire_date datetime
 );
 create table refresh_tokens (
-    refresh_token text,
+    refresh_token_id int primary key auto_increment,
+    refresh_token text not null,
     barber_user_id int,
     expire_date datetime
 );
