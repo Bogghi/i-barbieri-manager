@@ -47,6 +47,7 @@ class DataAccess extends BaseController
             }
         }catch (\PDOException $E) {
             $this->status = 500;
+            $this->error = $E->getMessage();
         }
 
         return $result;
@@ -65,6 +66,7 @@ class DataAccess extends BaseController
             }
         }catch (\PDOException $E){
             $this->status = 500;
+            $this->error = $E->getMessage();
         }
 
         return $result;
@@ -97,7 +99,8 @@ class DataAccess extends BaseController
                 $result[] = $this->pdo->lastInsertId();
             }
         }catch (\PDOException $E) {
-            //ToDo: log the exception
+            $this->status = 500;
+            $this->error = $E->getMessage();
         }
 
         return $result;
