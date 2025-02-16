@@ -105,4 +105,22 @@ class DataAccess extends BaseController
 
         return $result;
     }
+
+    protected function validateToken(string $token, string $type): bool
+    {
+        $valid = false;
+
+        if($type === 'oauth') {
+            $this->connectPdo();
+            $tokenRow = $this->get('oauth_tokens', ['oauth_token' => $token, 'expire_date' => '<now()']);
+            $valid = count($tokenRow) > 0;
+        }
+        if($type === 'refresh') {
+            $this->connectPdo();
+            $tokenRow = $this->get('refresh_tokens', ['refresh_token' => $token, 'expire_date' => '<now()']);
+            $valid = count($tokenRow) > 0;
+        }
+
+        return $valid;
+    }
 }
