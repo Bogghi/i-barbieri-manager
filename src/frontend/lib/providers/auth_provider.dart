@@ -31,14 +31,13 @@ class AuthProvider extends ChangeNotifier {
       _oauthToken = tokens['oauth_token'];
       _refreshToken = tokens['refresh_token'];
 
-      if(_oauthToken != null && context.mounted) {
+      if(_oauthToken != null) {
         if(Utilities.isWeb()) {
           WebInterface().addToSessionStorage('oauth_token', _oauthToken!);
           if(_refreshToken != null) {
             WebInterface().addToLocalStorage('refresh_token', _refreshToken!);
           }
         }
-        Navigator.pushReplacementNamed(context, '/console');
       }else {
         _credentialError = true;
         _errorMsg = "Le credenziali inserite non sono valide";
@@ -69,7 +68,7 @@ class AuthProvider extends ChangeNotifier {
 
   }
 
-  Future<void> fetchTokensFromStorage() async {
+  Future<void> fetchTokensFromStorage(BuildContext context) async {
     if(Utilities.isWeb()) {
       _oauthToken = WebInterface().getFromSessionStorage('oauth_token');
       _refreshToken = WebInterface().getFromLocalStorage('refresh_token');

@@ -13,6 +13,14 @@ class LoginApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<AuthProvider>().fetchTokensFromStorage(context);
+    final oauth = context.watch<AuthProvider>().oauthToken();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if(oauth != null) {
+        Navigator.pushReplacementNamed(context, '/console');
+      }
+    });
+
     return Scaffold(
       body: Center(
         child: SizedBox(

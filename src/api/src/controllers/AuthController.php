@@ -55,7 +55,7 @@ class AuthController extends DataAccess
                         [
                             'oauth_token' => $oAuthTokenData['oauth_token'],
                             'barber_user_id' => $barberUserId,
-                            'expire_date' => $oAuthTokenData['eta']
+                            'expire_date' => date('Y-m-d H:i:s', $oAuthTokenData['eta'])
                         ]
                     );
                     $this->add(
@@ -136,7 +136,7 @@ class AuthController extends DataAccess
         $res = ['eta' => strtotime('+24 hours')];
         $res['refresh_token'] = $this->generateToken([
             'userId' => $userId,
-            'eat' => $res['expire'],
+            'eat' => $res['eta'],
             'refresh_secret' => JWT_SECRET_REFRESH
         ]);
 
