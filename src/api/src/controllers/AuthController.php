@@ -8,6 +8,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class AuthController extends DataAccess
+
 {
     private const array JWT_HEADER = ['alg' => 'HS256', 'typ' => 'jwt'];
 
@@ -23,7 +24,7 @@ class AuthController extends DataAccess
         $signature = hash_hmac("sha256", $bs64header . "." . $bs64payload, JWT_SECRET, true);
         $bs64signature = $this->base64URLEncode($signature);
 
-        return $bs64header.$bs64payload.$bs64signature;
+        return "$bs64header.$bs64payload.$bs64signature";
     }
 
     public function login(Request $request, Response $response, $args): Response
@@ -50,7 +51,7 @@ class AuthController extends DataAccess
                     'password' => $userData[0]['password'],
                     'eat' => $expireDateTimestamp
                 ]);
-                $refreshTokenData = $this->generateRefreshToken(email: $userData[0]['email'], password: $userData[0]['password']);
+                $refreshTokenData = $this->generateRefreshToken($userData[0]['barber_user_id']);
 
                 try {
                     $this->debug = true;
@@ -88,13 +89,13 @@ class AuthController extends DataAccess
         return $this->prepareResponse($response, $result);
     }
 
-    private function generateRefreshToken(string $email, String $password): array
+    private function generateRefreshToken(int $userId): array
     {
-        $res = ['expire' => strtotime('+1 month')];
+        $res = ['expire' => strtotime('+24 hours')];
         $res['refresh_token'] = $this->generateToken([
-            'email' => $email,
-            'password' => $password,
-            'eat' => $res['expire']
+            'userId' => $userId,
+            'eat' => $res['expire'],
+            'refresh_secret' => JWT_SECRET_REFRESH
         ]);
 
         return $res;
