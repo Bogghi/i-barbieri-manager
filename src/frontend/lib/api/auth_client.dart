@@ -24,6 +24,27 @@ abstract class AuthClient {
     return tokens;
   }
 
+  static Future<Map<String, String?>> loginByRefreshToken(String refreshToken) async {
+    Map<String, String?> tokens = {'oauth_token': null, 'refresh_token': null};
+
+    Response response = await BaseClientUtility.postData(
+      '/barbers/refresh', {}, {'refresh_token': refreshToken}
+    );
+
+    final Status status = BaseClientUtility.getStatusFromResponse(response);
+    if(status == Status.ok) {
+      var data = jsonDecode(response.body);
+      if(data.containsKey('oauth_token')) {
+        tokens['oauth_token'] = data['oauth_token'];
+      }
+      if(data.containsKey('refresh_token')) {
+        tokens['refresh_token'] = data['refresh_token'];
+      }
+    }
+
+    return tokens;
+  }
+
   static Future<bool> signup(String email, String password) async {
     final bool signupStatus;
     Response response = await BaseClientUtility.postData(

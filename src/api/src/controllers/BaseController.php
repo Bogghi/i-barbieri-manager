@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 abstract class BaseController
 {
     const array NOT_AUTHORIZED_MESSAGE = ['message' => 'You are not authorized to access this resource.'];
+    const array INVALID_PARAM_MESSAGE = ['message' => 'Invalid parameters.'];
 
     protected int $status = 200;
     protected bool $debug = false;

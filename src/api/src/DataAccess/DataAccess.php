@@ -106,6 +106,55 @@ class DataAccess extends BaseController
         return $result;
     }
 
+    public function update(string $table, ?array $args = null, ?array $where = null): array
+    {
+        $this->connectPdo();
+
+        $result = [];
+        if(!$args){
+            return $result;
+        }
+
+        $base = "UPDATE $table SET ";
+        $cols = [];
+        $params = [];
+
+        foreach ($args as $col => $val) {
+            $cols[] = "$col = ?";
+            $params[] = $val;
+        }
+
+        $wherePart = '';
+        if($where && is_array($where)) {
+            $columns = [];
+            $values = [];
+            foreach ($where as $col => $arg) {
+                $argStr = "$arg";
+                $operator = in_array($argStr[0], ['>','<','!=','like']) ? $argStr[0] : '=';
+                $columns[] = "$col $operator ?";
+                $values[] = $operator !== '=' ? ltrim($argStr, '><!=like') : $argStr;
+            }
+            $wherePart = 'where '.implode(' and ', $columns);
+            $params = array_merge($params, $values);
+        }
+
+        if($wherePart !== '') {
+            try {
+                $sql = $base . implode(',', $cols) . ' ' . $wherePart;
+                $stmt = $this->pdo->prepare($sql);
+                $exec = $stmt->execute($params);
+                if ($exec) {
+                    $result[] = $stmt->rowCount();
+                }
+            } catch (\PDOException $E) {
+                $this->status = 500;
+                $this->error = $E->getMessage();
+            }
+        }
+
+        return $result;
+    }
+
     protected function validateToken(string $token, string $type): bool
     {
         $valid = false;

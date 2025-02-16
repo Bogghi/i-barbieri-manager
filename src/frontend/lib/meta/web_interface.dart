@@ -12,14 +12,14 @@ class WebInterface {
   void addToLocalStorage(String key, String value) {
     window.localStorage[key] = value;
   }
-  String getFromLocalStorage(String key) {
-    return window.localStorage[key] ?? '';
+  String? getFromLocalStorage(String key) {
+    return window.localStorage[key];
   }
 
   void addToSessionStorage(String key, String value) {
     window.sessionStorage[key] = value;
   }
-  String getFromSessionStorage(String key) {
-    return window.sessionStorage[key] ?? '';
+  String? getFromSessionStorage(String key) {
+    return window.sessionStorage[key];
   }
 }

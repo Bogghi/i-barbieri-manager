@@ -39,18 +39,13 @@ class AuthController extends DataAccess
 
             $barberUserTokens = $this->get("oauth_tokens", ['barber_user_id' => $barberUserId, 'expire_date' => '<now()']);
             $barberRefreshTokens = $this->get("refresh_tokens", ['barber_user_id' => $barberUserId, 'expire_date' => '<now()']);
+
             if(count($barberUserTokens) > 0 && strtotime($barberUserTokens[0]['expire_date']) > strtotime('now')){
                 $result['oauth_token'] = $barberUserTokens[0]['oauth_token'];
                 $result['refresh_token'] = $barberRefreshTokens[0]['refresh_token'];
             }
             else {
-                $expireDateTimestamp = strtotime('+24 hours');
-                $expireDateFormatted = date('Y-m-d H:i:s', $expireDateTimestamp);
-                $oAuthToken = $this->generateToken([
-                    'email' => $userData[0]['email'],
-                    'password' => $userData[0]['password'],
-                    'eat' => $expireDateTimestamp
-                ]);
+                $oAuthTokenData = $this->generateOAuthToken($userData[0]['email'], $userData[0]['password']);
                 $refreshTokenData = $this->generateRefreshToken($userData[0]['barber_user_id']);
 
                 try {
@@ -58,9 +53,9 @@ class AuthController extends DataAccess
                     $this->add(
                         'oauth_tokens',
                         [
-                            'oauth_token' => $oAuthToken,
+                            'oauth_token' => $oAuthTokenData['oauth_token'],
                             'barber_user_id' => $barberUserId,
-                            'expire_date' => $expireDateFormatted
+                            'expire_date' => $oAuthTokenData['eta']
                         ]
                     );
                     $this->add(
@@ -68,10 +63,10 @@ class AuthController extends DataAccess
                         [
                             'refresh_token' => $refreshTokenData['refresh_token'],
                             'barber_user_id' => $barberUserId,
-                            'expire_date' => date('Y-m-d H:i:s', $refreshTokenData['expire'])
+                            'expire_date' => date('Y-m-d H:i:s', $refreshTokenData['eta'])
                         ]
                     );
-                    $result['oauth_token'] = $oAuthToken;
+                    $result['oauth_token'] = $oAuthTokenData['oauth_token'];
                     $result['refresh_token'] = $refreshTokenData['refresh_token'];
                 }
                 catch (\Exception $e) {
@@ -89,9 +84,56 @@ class AuthController extends DataAccess
         return $this->prepareResponse($response, $result);
     }
 
+    public function loginByRefreshToken(Request $request, Response $response, $args): Response
+    {
+        $body = array();
+        $requestBody = $request->getParsedBody();
+
+        if(isset($requestBody['refresh_token'])) {
+
+            $now = date('Y-m-d H:i:s', strtotime('now'));
+            $tokens = $this->get('refresh_tokens', ['refresh_token' => $requestBody['refresh_token'], 'expire_date' => ">$now"]);
+            if(count($tokens) > 0) {
+                $userData = $this->get('barber_users', ['barber_user_id' => $tokens[0]['barber_user_id']]);
+                $oAuthTokenData = $this->generateOAuthToken($userData[0]['email'], $userData[0]['password']);
+                $refreshTokenData = $this->generateRefreshToken($userData[0]['barber_user_id']);
+
+                try {
+                    $this->debug = true;
+                    $this->update(
+                        'oauth_tokens',
+                        ['oauth_token' => $oAuthTokenData['oauth_token'], 'expire_date' => date('Y-m-d H:i:s', $oAuthTokenData['eta'])],
+                        ['barber_user_id' => $userData[0]['barber_user_id']]
+                    );
+                    $this->update(
+                        'refresh_tokens',
+                        ['refresh_token' => $refreshTokenData['refresh_token'], 'expire_date' => date('Y-m-d H:i:s', $refreshTokenData['eta'])],
+                        ['barber_user_id' => $userData[0]['barber_user_id']]
+                    );
+                    $body['oauth_token'] = $oAuthTokenData['oauth_token'];
+                    $body['refresh_token'] = $refreshTokenData['refresh_token'];
+                }
+                catch (\Exception $e) {
+                    $this->status = 403;
+                    $body = self::NOT_AUTHORIZED_MESSAGE;
+                }
+            }
+            else {
+                $body = self::INVALID_PARAM_MESSAGE;
+                $body[] = $tokens;
+            }
+        }
+        else {
+            $this->status = 403;
+            $body = self::NOT_AUTHORIZED_MESSAGE;
+        }
+
+        return $this->prepareResponse($response, $body);
+    }
+
     private function generateRefreshToken(int $userId): array
     {
-        $res = ['expire' => strtotime('+24 hours')];
+        $res = ['eta' => strtotime('+24 hours')];
         $res['refresh_token'] = $this->generateToken([
             'userId' => $userId,
             'eat' => $res['expire'],
@@ -99,6 +141,17 @@ class AuthController extends DataAccess
         ]);
 
         return $res;
+    }
+    private function generateOAuthToken(string $email, string $password): array
+    {
+        $map = ['eta' => strtotime('+2 hours')];
+        $map['oauth_token'] = $this->generateToken([
+            'email' => $email,
+            'password' => $password,
+            'eat' => $map['eta']
+        ]);
+
+        return $map;
     }
 
     public function signup(Request $request, Response $response, $args): Response

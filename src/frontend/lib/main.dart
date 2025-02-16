@@ -51,12 +51,18 @@ class App extends StatelessWidget {
     TextTheme textTheme = createTextTheme(context, "Abel", "ABeeZee");
     MaterialTheme theme = MaterialTheme(textTheme);
 
+    context.watch<AuthProvider>().fetchTokensFromStorage();
+    String initialRoute = "/login";
+    if(context.watch<AuthProvider>().oauthToken() != null) {
+      initialRoute = "/console";
+    }
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Barber manager',
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
       // Temporary set to reservation to work on that specific ui section
-      initialRoute: '/login',
+      initialRoute: initialRoute,
       routes: {
         '/console': (context) => ConsoleApp(),
         '/login': (context) => LoginApp(),

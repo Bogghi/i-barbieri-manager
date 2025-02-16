@@ -18,7 +18,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   bool credentialError() => _credentialError;
-  String? jwtToken() => _oauthToken;
+  String? oauthToken() => _oauthToken;
   String? errorMsg() => _errorMsg;
   String? refreshToken() => _refreshToken;
   Future<void> verifyCredentials(String email, String password, BuildContext context) async {
@@ -33,9 +33,9 @@ class AuthProvider extends ChangeNotifier {
 
       if(_oauthToken != null && context.mounted) {
         if(Utilities.isWeb()) {
-          WebInterface().addToLocalStorage('oauth_token', _oauthToken!);
+          WebInterface().addToSessionStorage('oauth_token', _oauthToken!);
           if(_refreshToken != null) {
-            WebInterface().addToSessionStorage('refresh_token', _refreshToken!);
+            WebInterface().addToLocalStorage('refresh_token', _refreshToken!);
           }
         }
         Navigator.pushReplacementNamed(context, '/console');
@@ -67,6 +67,27 @@ class AuthProvider extends ChangeNotifier {
       }
     }
 
+  }
+
+  Future<void> fetchTokensFromStorage() async {
+    if(Utilities.isWeb()) {
+      _oauthToken = WebInterface().getFromSessionStorage('oauth_token');
+      _refreshToken = WebInterface().getFromLocalStorage('refresh_token');
+
+      if(_refreshToken != null && _oauthToken == null) {
+        final tokens = await AuthClient.loginByRefreshToken(_refreshToken!);
+
+        _oauthToken = tokens['oauth_token'];
+        _refreshToken = tokens['refresh_token'];
+
+        if(Utilities.isWeb()) {
+          WebInterface().addToSessionStorage('oauth_token', _oauthToken!);
+          if(_refreshToken != null) {
+            WebInterface().addToLocalStorage('refresh_token', _refreshToken!);
+          }
+        }
+      }
+    }
   }
 
 }
