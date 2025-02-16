@@ -9,17 +9,35 @@ class ConsoleApp extends StatelessWidget {
       body: Row(
         children: [
           // Left Side - AppBar
-
-          // Right Side - Playground
-          Expanded(
-            child: Container(
-              child: Center(
-                child: Text(
-                  'Playground',
-                  style: TextStyle(fontSize: 24),
-                ),
+          Container(
+            width: 80,
+            height: double.infinity,
+            color: Theme.of(context).colorScheme.secondary,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Column(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.countertops_outlined,
+                      color: Theme.of(context).colorScheme.onSecondary,
+                    ),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.settings_outlined,
+                      color: Theme.of(context).colorScheme.onSecondary,
+                    ),
+                    onPressed: () {},
+                  ),
+                ],
               ),
             ),
+          ),
+          // Right Side - Playground
+          const Expanded(
+            child: Placeholder(),
           ),
         ],
       ),
