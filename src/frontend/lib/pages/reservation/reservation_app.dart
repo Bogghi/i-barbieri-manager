@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/meta/routes.dart';
 import 'package:frontend/models/barber_store_service.dart';
 import 'package:frontend/providers/slot_provider.dart';
 import 'package:provider/provider.dart';
@@ -430,7 +431,7 @@ class ReservationApp extends StatelessWidget {
   void handleBooking() async {
     int? reservationId = await context.read<ReservationProvider>().book();
     if(context.mounted && reservationId != null) {
-      Navigator.pushNamed(context, '/confirmReservation');
+      Navigator.pushNamed(context, Routes.confirmReservation);
     }
   }
 }

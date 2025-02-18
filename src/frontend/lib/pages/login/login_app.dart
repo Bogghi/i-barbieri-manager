@@ -1,6 +1,7 @@
 // main dependencies
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:frontend/meta/routes.dart';
 // widgets
 import 'package:frontend/pages/shared/confirmation_button.dart';
 import 'package:frontend/providers/auth_provider.dart';
@@ -17,7 +18,7 @@ class LoginApp extends StatelessWidget {
     final oauth = context.watch<AuthProvider>().oauthToken();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if(oauth != null) {
-        Navigator.pushReplacementNamed(context, '/console');
+        Navigator.pushReplacementNamed(context, Routes.counter);
       }
     });
 

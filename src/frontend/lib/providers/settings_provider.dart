@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SettingsProvider extends ChangeNotifier {
-  Brightness _darkMode = Brightness.dark;
+  Brightness _darkMode = Brightness.light;
 
   SettingsProvider();
 

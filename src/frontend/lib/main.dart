@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/theme/theme.dart';
 import 'package:frontend/theme/util.dart';
+import 'package:frontend/meta/routes.dart';
 // providers
 import 'package:frontend/providers/reservation_provider.dart';
 import 'package:frontend/providers/settings_provider.dart';
@@ -56,17 +57,17 @@ class App extends StatelessWidget {
       title: 'Barber manager',
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
       // Temporary set to reservation to work on that specific ui section
-      initialRoute: '/login',
+      initialRoute: Routes.login,
       routes: {
-        '/console': (context) => ConsoleApp(),
-        '/login': (context) => LoginApp(),
-        '/reservation': (context) {
+        Routes.counter: (context) => ConsoleApp(),
+        Routes.login: (context) => LoginApp(),
+        Routes.reservation: (context) {
           context.read<BarberStoresProvider>().fetch();
           context.read<BarbersProvider>().fetch(12);
           context.read<BarberStoreServicesProvider>().fetch(12);
           return ReservationApp();
         },
-        '/confirmReservation': (context) => const PopScope(canPop: false, child: ConfirmReservationApp()),
+        Routes.confirmReservation: (context) => const PopScope(canPop: false, child: ConfirmReservationApp()),
       },
     );
   }
