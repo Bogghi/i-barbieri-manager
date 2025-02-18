@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/console/widgets/sidebar_button.dart';
 
 class ConsoleSideBar extends StatelessWidget {
   const ConsoleSideBar({super.key});
@@ -13,28 +14,16 @@ class ConsoleSideBar extends StatelessWidget {
         padding: const EdgeInsets.only(top: 12),
         child: Column(
           children: [
-            ElevatedButton(
+            SidebarButton(
+              active: true,
+              icon: const Icon(Icons.euro_symbol_outlined),
               onPressed: () {},
-              child: const SizedBox(
-                height: 40,
-                child: Icon(Icons.euro_symbol_outlined)
-              ),
             ),
             const SizedBox(height: 10),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-              ),
+            SidebarButton(
+              icon: const Icon(Icons.settings_outlined),
               onPressed: () {},
-              child: SizedBox(
-                height: 40,
-                child: Icon(
-                  Icons.settings_outlined,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
-              ),
-            ),
+            )
           ],
         ),
       ),
