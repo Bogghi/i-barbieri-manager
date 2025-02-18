@@ -17,6 +17,7 @@ class Sidebar extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(top: 12),
         child: Column(
+          spacing: 10,
           children: [
             SidebarButton(
               active: currentRoute == Routes.counter,
@@ -27,7 +28,6 @@ class Sidebar extends StatelessWidget {
                 }
               },
             ),
-            const SizedBox(height: 10),
             SidebarButton(
               active: currentRoute == Routes.settings,
               icon: const Icon(Icons.settings_outlined),

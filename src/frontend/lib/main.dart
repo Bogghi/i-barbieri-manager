@@ -16,8 +16,7 @@ import 'package:frontend/providers/auth_provider.dart';
 import 'package:frontend/pages/reservation/reservation_app.dart';
 import 'package:frontend/pages/confirmReservation/confirm_reservation_app.dart';
 import 'package:frontend/pages/login/login_app.dart';
-import 'package:frontend/pages/console/counter_app.dart';
-import 'package:frontend/pages/console/settings_app.dart';
+import 'package:frontend/pages/console/console_app.dart';
 
 void main() {
   runApp(const ProviderApp());
@@ -63,10 +62,10 @@ class App extends StatelessWidget {
         WidgetBuilder builder;
         switch (settings.name) {
           case Routes.counter:
-            builder = (context) => const CounterApp();
+            builder = (context) => const ConsoleApp();
             break;
           case Routes.settings:
-            builder = (context) => const SettingsApp();
+            builder = (context) => const ConsoleApp();
             break;
           case Routes.login:
             builder = (context) => LoginApp();
