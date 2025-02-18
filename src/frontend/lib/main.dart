@@ -59,17 +59,38 @@ class App extends StatelessWidget {
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
       // Temporary set to reservation to work on that specific ui section
       initialRoute: Routes.login,
-      routes: {
-        Routes.counter: (context) => const CounterApp(),
-        Routes.settings: (context) => const SettingsApp(),
-        Routes.login: (context) => LoginApp(),
-        Routes.reservation: (context) {
-          context.read<BarberStoresProvider>().fetch();
-          context.read<BarbersProvider>().fetch(12);
-          context.read<BarberStoreServicesProvider>().fetch(12);
-          return ReservationApp();
-        },
-        Routes.confirmReservation: (context) => const PopScope(canPop: false, child: ConfirmReservationApp()),
+      onGenerateRoute: (settings) {
+        WidgetBuilder builder;
+        switch (settings.name) {
+          case Routes.counter:
+            builder = (context) => const CounterApp();
+            break;
+          case Routes.settings:
+            builder = (context) => const SettingsApp();
+            break;
+          case Routes.login:
+            builder = (context) => LoginApp();
+            break;
+          case Routes.reservation:
+            builder = (context) {
+              context.read<BarberStoresProvider>().fetch();
+              context.read<BarbersProvider>().fetch(12);
+              context.read<BarberStoreServicesProvider>().fetch(12);
+              return ReservationApp();
+            };
+            break;
+          case Routes.confirmReservation:
+            builder = (context) => const PopScope(canPop: false, child: ConfirmReservationApp());
+            break;
+          default:
+            return null;
+        }
+        return PageRouteBuilder(
+          settings: settings,
+          pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        );
       },
     );
   }

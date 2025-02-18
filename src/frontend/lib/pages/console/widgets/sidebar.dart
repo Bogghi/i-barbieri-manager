@@ -7,6 +7,7 @@ class Sidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(ModalRoute.of(context)?.settings.name);
     return Container(
       width: 80,
       height: double.infinity,
