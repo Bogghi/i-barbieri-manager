@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ConsoleSideBar extends StatelessWidget {
-  const ConsoleSideBar({Key? key}) : super(key: key);
+  const ConsoleSideBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +22,17 @@ class ConsoleSideBar extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+              ),
               onPressed: () {},
-              child: const SizedBox(
+              child: SizedBox(
                 height: 40,
-                child: Icon(Icons.settings_outlined),
+                child: Icon(
+                  Icons.settings_outlined,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
               ),
             ),
           ],
