@@ -17,6 +17,7 @@ import 'package:frontend/pages/reservation/reservation_app.dart';
 import 'package:frontend/pages/confirmReservation/confirm_reservation_app.dart';
 import 'package:frontend/pages/login/login_app.dart';
 import 'package:frontend/pages/console/counter_app.dart';
+import 'package:frontend/pages/console/settings_app.dart';
 
 void main() {
   runApp(const ProviderApp());
@@ -59,7 +60,8 @@ class App extends StatelessWidget {
       // Temporary set to reservation to work on that specific ui section
       initialRoute: Routes.login,
       routes: {
-        Routes.counter: (context) => CounterApp(),
+        Routes.counter: (context) => const CounterApp(),
+        Routes.settings: (context) => const SettingsApp(),
         Routes.login: (context) => LoginApp(),
         Routes.reservation: (context) {
           context.read<BarberStoresProvider>().fetch();

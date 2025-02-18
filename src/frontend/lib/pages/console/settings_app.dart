@@ -2,8 +2,8 @@ import "package:flutter/material.dart";
 
 import "package:frontend/pages/console/widgets/sidebar.dart";
 
-class CounterApp extends StatelessWidget {
-  const CounterApp({super.key});
+class SettingsApp extends StatelessWidget {
+  const SettingsApp({super.key});
 
   @override
   Widget build(BuildContext context) {
