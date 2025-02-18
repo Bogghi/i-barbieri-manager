@@ -7,7 +7,9 @@ class Sidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(ModalRoute.of(context)?.settings.name);
+
+    final String currentRoute = ModalRoute.of(context)?.settings.name ?? '';
+
     return Container(
       width: 80,
       height: double.infinity,
@@ -17,18 +19,22 @@ class Sidebar extends StatelessWidget {
         child: Column(
           children: [
             SidebarButton(
-              active: ModalRoute.of(context)?.settings.name == Routes.counter,
+              active: currentRoute == Routes.counter,
               icon: const Icon(Icons.euro_symbol_outlined),
               onPressed: () {
-                Navigator.of(context).pushNamed(Routes.counter);
+                if(currentRoute != Routes.counter){
+                  Navigator.of(context).pushNamed(Routes.counter);
+                }
               },
             ),
             const SizedBox(height: 10),
             SidebarButton(
-              active: ModalRoute.of(context)?.settings.name == Routes.settings,
+              active: currentRoute == Routes.settings,
               icon: const Icon(Icons.settings_outlined),
               onPressed: () {
-                Navigator.of(context).pushNamed(Routes.settings);
+                if(currentRoute != Routes.settings) {
+                  Navigator.of(context).pushNamed(Routes.settings);
+                }
               },
             )
           ],
