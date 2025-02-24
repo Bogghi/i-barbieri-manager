@@ -12,6 +12,7 @@ import 'package:frontend/providers/barbers_provider.dart';
 import 'package:frontend/providers/barber_stores_provider.dart';
 import 'package:frontend/providers/slot_provider.dart';
 import 'package:frontend/providers/auth_provider.dart';
+import 'package:frontend/providers/console_provider.dart';
 // pages
 import 'package:frontend/pages/reservation/reservation_app.dart';
 import 'package:frontend/pages/confirmReservation/confirm_reservation_app.dart';
@@ -36,6 +37,7 @@ class ProviderApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => BarberStoresProvider()),
         ChangeNotifierProvider(create: (context) => SlotProvider()),
         ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => ConsoleProvider()),
       ],
       child: const App()
     );

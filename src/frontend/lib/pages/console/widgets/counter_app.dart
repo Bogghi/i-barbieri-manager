@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/providers/console_provider.dart';
+import 'package:provider/provider.dart';
 
-enum CounterSegment {counter, history, schedule}
-CounterSegment selected = CounterSegment.counter;
 class CounterApp extends StatelessWidget {
   const CounterApp({super.key});
 
@@ -27,7 +27,12 @@ class CounterApp extends StatelessWidget {
                       ),
                     ),
                     SegmentedButton<CounterSegment>(
-                      segments: <ButtonSegment<CounterSegment>>[
+                      showSelectedIcon: false,
+                      style: SegmentedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+                        foregroundColor: Theme.of(context).colorScheme.secondary,
+                      ),
+                      segments: const <ButtonSegment<CounterSegment>>[
                         ButtonSegment<CounterSegment>(
                           icon: Icon(Icons.countertops_outlined),
                           value: CounterSegment.counter,
@@ -41,9 +46,9 @@ class CounterApp extends StatelessWidget {
                           value: CounterSegment.schedule,
                         ),
                       ],
-                      selected: <CounterSegment>{selected},
+                      selected: <CounterSegment>{context.watch<ConsoleProvider>().selected},
                       onSelectionChanged: (Set<CounterSegment> value){
-                        print(value);
+                        context.read<ConsoleProvider>().setSelected(value.first);
                       },
                     ),
                   ],
@@ -51,7 +56,7 @@ class CounterApp extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
+          const Expanded(
             flex: 15,
             child: Placeholder(),
           )
