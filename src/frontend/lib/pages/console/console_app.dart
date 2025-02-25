@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:frontend/pages/console/widgets/counter_app.dart";
+import "package:frontend/pages/console/subpages/counter_app.dart";
 
 import "package:frontend/pages/console/widgets/sidebar.dart";
 import "package:frontend/meta/routes.dart";

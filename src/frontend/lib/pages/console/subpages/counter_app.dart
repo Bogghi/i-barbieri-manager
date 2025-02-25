@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/console/widgets/console_top_navbar.dart';
+import 'package:frontend/pages/shared/panel.dart';
 
 class CounterApp extends StatelessWidget {
   const CounterApp({super.key});
@@ -15,7 +16,10 @@ class CounterApp extends StatelessWidget {
           ),
           Expanded(
             flex: 15,
-            child: Placeholder(),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Placeholder(),
+            ),
           )
         ],
       ),
