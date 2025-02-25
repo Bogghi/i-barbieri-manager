@@ -1,12 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/barber_store_service.dart';
 
 enum CounterSegment {counter, history, schedule}
+
 class ConsoleProvider extends ChangeNotifier {
+
   CounterSegment selected = CounterSegment.counter;
+  Map<int, Map<String, dynamic>> cart = {};
+
   ConsoleProvider();
 
   void setSelected(CounterSegment segment) {
     selected = segment;
+    notifyListeners();
+  }
+
+  void addToCart(BarberStoreService service, int quantity) {
+
+    if(cart.containsKey(service.barberServiceId)) {
+      cart[service.barberServiceId]!["quantity"] += quantity;
+    }
+    else {
+      cart[service.barberServiceId] = {
+        "service": service,
+        "quantity": quantity
+      };
+    }
+
     notifyListeners();
   }
 }
