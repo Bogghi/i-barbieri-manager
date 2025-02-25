@@ -64,7 +64,10 @@ class App extends StatelessWidget {
         WidgetBuilder builder;
         switch (settings.name) {
           case Routes.counter:
-            builder = (context) => const ConsoleApp();
+            builder = (context) {
+              context.read<BarberStoreServicesProvider>().fetch(12);
+              return const ConsoleApp();
+            };
             break;
           case Routes.settings:
             builder = (context) => const ConsoleApp();
