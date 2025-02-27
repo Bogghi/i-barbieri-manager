@@ -15,10 +15,15 @@ class ConsoleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addToCart(BarberStoreService service, int quantity) {
+  void updateCart(BarberStoreService service, int quantity) {
 
     if(cart.containsKey(service.barberServiceId)) {
       cart[service.barberServiceId]!["quantity"] += quantity;
+
+      if(cart[service.barberServiceId]!["quantity"] == 0) {
+        cart.remove(service.barberServiceId);
+      }
+
     }
     else {
       cart[service.barberServiceId] = {

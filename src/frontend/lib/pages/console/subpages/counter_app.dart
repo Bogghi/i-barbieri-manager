@@ -70,7 +70,7 @@ class CounterApp extends StatelessWidget {
                           child: InkWell(
                             borderRadius: const BorderRadius.all(Radius.circular(10)),
                             onTap: () {
-                              context.read<ConsoleProvider>().addToCart(service, 1);
+                              context.read<ConsoleProvider>().updateCart(service, 1);
                             },
                             child: CardContent(
                               body: Text(
@@ -134,9 +134,20 @@ class CounterApp extends StatelessWidget {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  icon: Icon(
-                                    Icons.remove,
-                                    color: Theme.of(context).colorScheme.error,
+                                  icon: Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Theme.of(context).colorScheme.secondary,
+                                      ),
+                                      onPressed: () {
+                                        context.read<ConsoleProvider>().updateCart(service, -1);
+                                      },
+                                      child: Icon(
+                                        Icons.remove,
+                                        color: Theme.of(context).colorScheme.onSecondary,
+                                      ),
+                                    ),
                                   ),
                                   cartCounter: Container(
                                       decoration: BoxDecoration(
