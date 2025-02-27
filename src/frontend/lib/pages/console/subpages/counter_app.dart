@@ -94,9 +94,95 @@ class CounterApp extends StatelessWidget {
                       },
                     ),
                   ),
-                  const Expanded(
+                  Expanded(
                     flex: 1,
-                    child: Placeholder()
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        side: BorderSide(color: Theme.of(context).colorScheme.primary),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: [
+                            const Text(
+                              "Carrello",
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const Divider(),
+                            ...context.watch<ConsoleProvider>().cart.values.map((value) {
+                              BarberStoreService service = value["service"];
+                              int quantity = value["quantity"];
+
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: CardContent(
+                                  body: Text(
+                                    service.serviceName,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  price: Text(
+                                    Utilities.readableEurVal(service.servicePrice * quantity),
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  icon: Icon(
+                                    Icons.remove,
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                                  cartCounter: Container(
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context).colorScheme.primary,
+                                        borderRadius: const BorderRadius.all(Radius.circular(20)),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                        child: Text(
+                                          "x $quantity",
+                                          style: TextStyle(
+                                              color: Theme.of(context).colorScheme.onPrimary
+                                          ),
+                                        ),
+                                      )
+                                  ),
+                                ),
+                              );
+                            }),
+                            const Spacer(),
+                            const Divider(),
+                            CardContent(
+                              body: const Text(
+                                "Totale",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              price: Text(
+                                Utilities.readableEurVal(context.watch<ConsoleProvider>().cart.values.fold(0, (previousValue, element) {
+                                  BarberStoreService service = element["service"];
+                                  int quantity = element["quantity"];
+
+                                  return previousValue + service.servicePrice * quantity;
+                                })),
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
                   )
                 ],
               ),
