@@ -173,23 +173,46 @@ class CounterApp extends StatelessWidget {
                               body: const Text(
                                 "Totale",
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 25,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                               price: Text(
-                                Utilities.readableEurVal(context.watch<ConsoleProvider>().cart.values.fold(0, (previousValue, element) {
-                                  BarberStoreService service = element["service"];
-                                  int quantity = element["quantity"];
+                                Utilities.readableEurVal(context.watch<ConsoleProvider>().cart.values.fold(
+                                  0,
+                                  (previousValue, element) {
+                                    BarberStoreService service = element["service"];
+                                    int quantity = element["quantity"];
 
-                                  return previousValue + service.servicePrice * quantity;
-                                })),
+                                    return previousValue + service.servicePrice * quantity;
+                                  }
+                                )),
                                 style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Theme.of(context).colorScheme.primary,
+                                  minimumSize: const Size(double.infinity, 50),
+                                ),
+                                onPressed: () {
+
+                                },
+                                child: Text(
+                                  "Paga",
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).colorScheme.onPrimary,
+                                  ),
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
