@@ -3,6 +3,7 @@ import 'package:frontend/meta/utilities.dart';
 import 'package:frontend/models/barber_store_service.dart';
 import 'package:frontend/pages/console/widgets/card_content.dart';
 import 'package:frontend/pages/console/widgets/console_top_navbar.dart';
+import 'package:frontend/pages/console/widgets/payments_bottom_sheet.dart';
 
 import 'package:frontend/providers/barber_store_services_provider.dart';
 import 'package:frontend/providers/console_provider.dart';
@@ -201,7 +202,12 @@ class CounterApp extends StatelessWidget {
                                   minimumSize: const Size(double.infinity, 50),
                                 ),
                                 onPressed: () {
-
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: (context) {
+                                      return const PaymentsBottomSheet();
+                                    },
+                                  );
                                 },
                                 child: Text(
                                   "Paga",
