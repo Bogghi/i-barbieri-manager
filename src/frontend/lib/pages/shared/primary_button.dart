@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class PrimaryButton extends StatelessWidget {
   final String label;
   final ButtonStyle? style;
+  final VoidCallback onPresssed;
 
   const PrimaryButton({
     super.key,
     required this.label,
+    required this.onPresssed,
     this.style
   });
 
@@ -16,7 +18,7 @@ class PrimaryButton extends StatelessWidget {
       style: style ?? ElevatedButton.styleFrom(
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      onPressed: () {},
+      onPressed: onPresssed,
       child: Text(
         label,
         style: TextStyle(

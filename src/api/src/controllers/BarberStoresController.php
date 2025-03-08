@@ -80,8 +80,15 @@ class BarberStoresController extends DataAccess
         try {
             $result['reservationId'] = $this->add(
                 table: 'barber_store_reservations',
-                args: ['barber_store_id' => 12, 'barber_id' => $barberId, 'barber_store_service_id' => $serviceId,
-                    'day' => $day, 'start_time' => $start, 'end_time' => $end, 'phone' => $phone]
+                args: [
+                    'barber_store_id' => 12,
+                    'barber_id' => $barberId,
+                    'barber_store_service_id' => $serviceId,
+                    'day' => $day,
+                    'start_time' => $start,
+                    'end_time' => $end,
+                    'phone' => $phone
+                ]
             )[0];
         }catch (\Exception $E) {
 

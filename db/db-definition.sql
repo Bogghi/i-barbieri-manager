@@ -40,7 +40,7 @@ insert into barber_store_schedules set barber_store_id = 1, weekday = 'friday', 
 insert into barber_store_schedules set barber_store_id = 1, weekday = 'saturday', opening = '9:00', closing = '20:00';
 insert into barber_store_schedules set barber_store_id = 1, weekday = 'sunday', opening = '9:00', closing = '20:00';
 
-create table barber_store_reservations (
+create table barber_store_reservation~s (
     barber_store_reservation_id int primary key auto_increment,
     barber_store_id int null,
     barber_id int,
@@ -48,7 +48,9 @@ create table barber_store_reservations (
     day date not null,
     start_time time not null,
     end_time time not null,
-    phone text not null
+    phone text not null,
+    status enum('pending', 'confirmed', 'cancelled') default 'pending',
+    datetime datetime default current_timestamp()
 );
 
 create table barber_users (
@@ -69,4 +71,15 @@ create table refresh_tokens (
     refresh_token text not null,
     barber_user_id int,
     expire_date datetime
+);
+
+create table orders (
+    order_id int primary key auto_increment,
+    barber_store_id int,
+    barber_store_service_id int,
+    reservation_id int,
+    amount int,
+    phone text not null,
+    status enum('pending', 'confirmed', 'completed', 'cancelled') default 'pending',
+    datetime datetime default current_timestamp()
 );

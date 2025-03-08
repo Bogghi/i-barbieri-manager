@@ -11,13 +11,13 @@ class PaymentsBottomSheet extends StatelessWidget {
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: const Padding(
-          padding: EdgeInsets.all(15.0),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             spacing: 10,
             children: [
-              Text(
+              const Text(
                 'Seleziona il metodo di pagamento',
                 style: TextStyle(
                   fontSize: 20,
@@ -31,11 +31,19 @@ class PaymentsBottomSheet extends StatelessWidget {
                     flex: 1,
                     child: PrimaryButton(
                       label: 'Carta',
+                      onPresssed: (){
+
+                      },
                     ),
                   ),
                   Expanded(
                     flex: 1,
-                    child: PrimaryButton(label: 'Contante'),
+                    child: PrimaryButton(
+                      label: 'Contante',
+                      onPresssed: (){
+                        
+                      },
+                    ),
                   ),
                 ],
               ),
