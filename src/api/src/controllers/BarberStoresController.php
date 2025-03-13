@@ -94,7 +94,47 @@ class BarberStoresController extends DataAccess
 
         }
 
-        $response->getBody()->write(json_encode($result));
-        return $response->withHeader('Content-type', 'application/json');
+        return $this->prepareResponse($response, $result);
+    }
+
+    public function addOrder(Request $request, Response $response, $args): Response
+    {
+        $this->debug = true;
+        $result = [];
+
+        $body = $request->getParsedBody();
+
+        $reservationId = $body['reservation_id'] ?? null;
+        $amount = $body['amount'] ?? null;
+        $items = isset($body['items']) ? json_decode($body['items'], true) : null;
+
+        if($amount && $items) {
+            $orderId = $this->add(
+                table: 'orders',
+                args: [
+                    'barber_store_id' => 12,
+                    'reservation_id' => $reservationId,
+                    'amount' => $amount
+                ]
+            )[0];
+
+            foreach ($items as $item) {
+                $this->add(
+                    table: 'orders_items',
+                    args: [
+                        'order_id' => $orderId,
+                        'barber_store_service_id' => $item['id'],
+                        'quantity' => $item['quantity']
+                    ]
+                );
+            }
+            $result['orderId'] = $orderId;
+            $result['result'] = 'OK';
+        }
+        else {
+            $result = self::INVALID_PARAM_MESSAGE;
+        }
+
+        return $this->prepareResponse($response, $result);
     }
 }

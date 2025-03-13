@@ -22,6 +22,10 @@ $app->group("/barber-stores/{id}", function(RouteCollectorProxy $group) {
         "/day/{day}/{month}/{year}/barber/{barberId}/service/{serviceId}/slot/{start}/{end}/book-reservation",
         BarberStoresController::class.":bookReservation"
     );
+    $group->post(
+        "/order/add",
+        BarberStoresController::class.":addOrder"
+    );
 
 });
 
