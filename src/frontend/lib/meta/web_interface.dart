@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'package:web/web.dart';
 
 class WebInterface {
   static final WebInterface _interface = WebInterface._internal();
@@ -10,16 +10,16 @@ class WebInterface {
   WebInterface._internal();
 
   void addToLocalStorage(String key, String value) {
-    window.localStorage[key] = value;
+    window.localStorage.setItem(key, value);
   }
   String? getFromLocalStorage(String key) {
-    return window.localStorage[key];
+    return window.localStorage.getItem(key);
   }
 
   void addToSessionStorage(String key, String value) {
-    window.sessionStorage[key] = value;
+    window.sessionStorage.setItem(key, value);
   }
   String? getFromSessionStorage(String key) {
-    return window.sessionStorage[key];
+    return window.sessionStorage.getItem(key);
   }
 }
