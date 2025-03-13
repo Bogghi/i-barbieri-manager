@@ -106,15 +106,17 @@ class BarberStoresController extends DataAccess
 
         $reservationId = $body['reservation_id'] ?? null;
         $amount = $body['amount'] ?? null;
+        $paymentMethod = $body['payment_method'] ?? null;
         $items = isset($body['items']) ? json_decode($body['items'], true) : null;
 
-        if($amount && $items) {
+        if($amount && $paymentMethod && $items) {
             $orderId = $this->add(
                 table: 'orders',
                 args: [
                     'barber_store_id' => 12,
                     'reservation_id' => $reservationId,
-                    'amount' => $amount
+                    'amount' => $amount,
+                    'payment_method' => $paymentMethod
                 ]
             )[0];
 

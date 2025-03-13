@@ -79,6 +79,7 @@ create table orders (
     reservation_id int,
     amount int,
     status enum('pending', 'confirmed', 'completed', 'cancelled') default 'pending',
+    payment_method enum('cash', 'credit_card') default 'cash',
     datetime datetime default current_timestamp()
 );
 
