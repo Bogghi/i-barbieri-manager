@@ -1,6 +1,8 @@
 import 'package:http/http.dart';
 import 'package:frontend/meta/constants.dart';
+import 'package:frontend/meta/tokens.dart';
 import 'package:frontend/providers/auth_provider.dart';
+
 
 enum Status { ok, forbidden, error }
 
@@ -32,10 +34,10 @@ abstract class BaseClientUtility {
 
   static Future<Response> getData(String path, Map<String, dynamic> headers) async {
     final url = await buildUrl(path);
-    final token = AuthProvider().oauthToken();
+    final token = Tokens().oauthToken;
 
     if(token != null) {
-      headers['authorization'] = "Bearer $token";
+      headers['Authorization'] = "Bearer $token";
     }
 
     return await get(
@@ -46,10 +48,10 @@ abstract class BaseClientUtility {
 
   static Future<Response> postData(String path, Map<String, dynamic> headers, Object body) async {
     final url = await buildUrl(path);
-    final token = AuthProvider().oauthToken();
+    final token = Tokens().oauthToken;
 
     if(token != null) {
-      headers['authorization'] = "Bearer $token";
+      headers['Authorization'] = "Bearer $token";
     }
 
     return await post(

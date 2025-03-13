@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/meta/routes.dart';
+import 'package:frontend/meta/tokens.dart';
 // widgets
 import 'package:frontend/pages/shared/confirmation_button.dart';
 import 'package:frontend/providers/auth_provider.dart';
@@ -14,8 +15,7 @@ class LoginApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.read<AuthProvider>().fetchTokensFromStorage(context);
-    final oauth = context.watch<AuthProvider>().oauthToken();
+    final oauth = Tokens().oauthToken;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if(oauth != null) {
         Navigator.pushReplacementNamed(context, Routes.counter);

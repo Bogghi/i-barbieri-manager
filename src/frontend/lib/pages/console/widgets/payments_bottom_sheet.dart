@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:frontend/pages/shared/primary_button.dart';
+import 'package:frontend/providers/console_provider.dart';
 
 class PaymentsBottomSheet extends StatelessWidget {
   const PaymentsBottomSheet({
@@ -32,7 +35,7 @@ class PaymentsBottomSheet extends StatelessWidget {
                     child: PrimaryButton(
                       label: 'Carta',
                       onPresssed: (){
-
+                        handleAddOrder(context, "Carta");
                       },
                     ),
                   ),
@@ -41,7 +44,7 @@ class PaymentsBottomSheet extends StatelessWidget {
                     child: PrimaryButton(
                       label: 'Contante',
                       onPresssed: (){
-                        
+                        handleAddOrder(context, "Contante");
                       },
                     ),
                   ),
@@ -52,5 +55,12 @@ class PaymentsBottomSheet extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void handleAddOrder(BuildContext context, String paymentMethod) async {
+    final bool result = await context.read<ConsoleProvider>().addOrder(paymentMethod);
+    if(result) {
+      print("order added");
+    }
   }
 }

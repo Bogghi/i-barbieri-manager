@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/api/api_client.dart';
 import 'package:frontend/models/barber_store_service.dart';
 
 enum CounterSegment {counter, history, schedule}
@@ -33,5 +34,19 @@ class ConsoleProvider extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  Future<bool> addOrder(String paymentMethod) async {
+    Map<String, dynamic> orderData = {
+      "services": cart.values.map((e) => {
+        "barber_service_id": e["service"].barberServiceId,
+        "quantity": e["quantity"]
+      }).toList(),
+      "payment_method": paymentMethod
+    };
+
+    Map<String, dynamic> response = await ApiClient.addOrder(orderData);
+
+    return response["result"] == "OK";
   }
 }

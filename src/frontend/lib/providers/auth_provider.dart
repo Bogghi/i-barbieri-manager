@@ -38,7 +38,8 @@ class AuthProvider extends ChangeNotifier {
             WebInterface().addToLocalStorage('refresh_token', _refreshToken!);
           }
         }
-      }else {
+      }
+      else {
         _credentialError = true;
         _errorMsg = "Le credenziali inserite non sono valide";
       }

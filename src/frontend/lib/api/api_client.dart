@@ -115,4 +115,20 @@ abstract class ApiClient {
 
     return reservationId;
   }
+
+  static Future<Map<String, dynamic>> addOrder(Map<String, dynamic> order) async {
+    Map<String, dynamic> result = {};
+
+    Response response = await BaseClientUtility.postData("/orders/add", {}, order);
+
+    final Status status = BaseClientUtility.getStatusFromResponse(response);
+    if(status == Status.ok) {
+      result = jsonDecode(response.body);
+    }
+    else {
+      result['error'] = true;
+    }
+
+    return result;
+  }
 }
