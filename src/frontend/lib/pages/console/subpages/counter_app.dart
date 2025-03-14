@@ -202,6 +202,9 @@ class CounterApp extends StatelessWidget {
                                   minimumSize: const Size(double.infinity, 50),
                                 ),
                                 onPressed: () {
+                                  if(context.read<ConsoleProvider>().cart.isEmpty) {
+                                    return;
+                                  }
                                   showModalBottomSheet(
                                     context: context,
                                     builder: (context) {

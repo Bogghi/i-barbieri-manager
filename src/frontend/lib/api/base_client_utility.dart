@@ -1,7 +1,7 @@
 import 'package:http/http.dart';
 import 'package:frontend/meta/constants.dart';
 import 'package:frontend/meta/tokens.dart';
-import 'package:frontend/providers/auth_provider.dart';
+import 'dart:convert';
 
 
 enum Status { ok, forbidden, error }
@@ -54,10 +54,11 @@ abstract class BaseClientUtility {
       headers['Authorization'] = "Bearer $token";
     }
 
+    headers['Content-Type'] = 'application/json'; // Ensure JSON content type
     return await post(
         url,
         headers: parseHeaders(headers),
-        body: body
+        body: jsonEncode(body)
     );
   }
 }

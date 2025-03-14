@@ -35,7 +35,7 @@ class PaymentsBottomSheet extends StatelessWidget {
                     child: PrimaryButton(
                       label: 'Carta',
                       onPresssed: (){
-                        handleAddOrder(context, "Carta");
+                        handleAddOrder(context, "credit_card");
                       },
                     ),
                   ),
@@ -44,7 +44,7 @@ class PaymentsBottomSheet extends StatelessWidget {
                     child: PrimaryButton(
                       label: 'Contante',
                       onPresssed: (){
-                        handleAddOrder(context, "Contante");
+                        handleAddOrder(context, "cash");
                       },
                     ),
                   ),

@@ -10,7 +10,7 @@ abstract class BaseController
     const array INVALID_PARAM_MESSAGE = ['message' => 'Invalid parameters.'];
 
     protected int $status = 200;
-    protected bool $debug = false;
+    protected bool $debug = true;
     protected ?string $error = null;
 
     protected function prepareResponse(Response &$response, mixed $body, string $contentType = 'Content-Type'): Response

@@ -38,12 +38,18 @@ class ConsoleProvider extends ChangeNotifier {
 
   Future<bool> addOrder(String paymentMethod) async {
     Map<String, dynamic> orderData = {
-      "services": cart.values.map((e) => {
-        "barber_service_id": e["service"].barberServiceId,
-        "quantity": e["quantity"]
-      }).toList(),
+      "items": [],
+      "amount": 0,
       "payment_method": paymentMethod
     };
+
+    for (var item in cart.values) {
+      orderData["amount"] += item["service"].servicePrice * item["quantity"];
+      orderData["items"].add({
+        "id": item["service"].barberServiceId,
+        "quantity": item["quantity"]
+      });
+    }
 
     Map<String, dynamic> response = await ApiClient.addOrder(orderData);
 

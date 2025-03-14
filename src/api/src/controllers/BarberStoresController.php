@@ -99,7 +99,6 @@ class BarberStoresController extends DataAccess
 
     public function addOrder(Request $request, Response $response, $args): Response
     {
-        $this->debug = true;
         $result = [];
 
         $body = $request->getParsedBody();
