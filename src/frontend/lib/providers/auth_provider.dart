@@ -21,7 +21,7 @@ class AuthProvider extends ChangeNotifier {
   String? oauthToken() => _oauthToken;
   String? errorMsg() => _errorMsg;
   String? refreshToken() => _refreshToken;
-  Future<void> verifyCredentials(String email, String password, BuildContext context) async {
+  Future<void> verifyCredentials(String email, String password) async {
 
     if(email.isEmpty || password.isEmpty){
       _credentialError = true;
@@ -58,7 +58,7 @@ class AuthProvider extends ChangeNotifier {
     else {
       bool signupResult = await AuthClient.signup(email, password);
       if(signupResult && context.mounted) {
-        verifyCredentials(email, password, context);
+        verifyCredentials(email, password);
       }
       else {
         _credentialError = true;

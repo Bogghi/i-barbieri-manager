@@ -36,6 +36,11 @@ class LoginApp extends StatelessWidget {
               ),
               TextField(
                 controller: passwordController,
+                onSubmitted: (value) {
+                  context
+                      .read<AuthProvider>()
+                      .verifyCredentials(usernameController.text, passwordController.text);
+                },
                 obscureText: !context.watch<AuthProvider>().passwordVisible(),
                 decoration: InputDecoration(
                   labelText: 'Password',
@@ -74,7 +79,7 @@ class LoginApp extends StatelessWidget {
                 onPressed: () async {
                   await context
                       .read<AuthProvider>()
-                      .verifyCredentials(usernameController.text, passwordController.text, context);
+                      .verifyCredentials(usernameController.text, passwordController.text);
                 }
               ),
               const SizedBox(height: 30,),
