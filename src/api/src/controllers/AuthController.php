@@ -30,7 +30,7 @@ class AuthController extends DataAccess
     public function login(Request $request, Response $response, $args): Response
     {
         $result = [];
-        $body = $request->getParsedBody();
+        $body = json_decode($request->getBody()->__toString(), true);
 
         $userData = $this->get(table: 'barber_users', args: ['email' => $body['email']]);
 

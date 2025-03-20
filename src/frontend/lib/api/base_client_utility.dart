@@ -1,18 +1,26 @@
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 import 'package:frontend/meta/constants.dart';
 import 'package:frontend/meta/tokens.dart';
-import 'dart:convert';
 
 
 enum Status { ok, forbidden, error }
 
-abstract class BaseClientUtility {
+class BaseClientUtility {
+  final dio = Dio();
 
-  static Future<Uri> buildUrl(String path) async {
-    return Uri.parse(await Constants.baseUrl()+path);
+  static final BaseClientUtility _baseClient = BaseClientUtility._internal();
+
+  factory BaseClientUtility() {
+    return _baseClient;
   }
 
-  static Map<String,String> parseHeaders(Map<String, dynamic> header) {
+  BaseClientUtility._internal();
+
+  Future<String> buildUrl(String path) async {
+    return await Constants.baseUrl()+path;
+  }
+
+  Map<String,String> parseHeaders(Map<String, dynamic> header) {
     final Map<String, String> parsedHeader = {};
 
     header.forEach((key, value) {
@@ -21,8 +29,19 @@ abstract class BaseClientUtility {
 
     return parsedHeader;
   }
+  Map<String, String> parseBody(Map<String, dynamic> body) {
+    final Map<String, String> parsedBody = {};
 
-  static Status getStatusFromResponse(Response response) {
+    body.forEach((key, value) {
+      parsedBody[key] = value.toString();
+    });
+
+    print(parsedBody);
+
+    return parsedBody;
+  }
+
+  Status getStatusFromResponse(Response response) {
     if (response.statusCode == 200) {
       return Status.ok;
     } else if (response.statusCode == 403) {
@@ -32,33 +51,37 @@ abstract class BaseClientUtility {
     }
   }
 
-  static Future<Response> getData(String path, Map<String, dynamic> headers) async {
+  Future<String> getData(String path, Map<String, dynamic> headers) async {
     final url = await buildUrl(path);
     final token = Tokens().oauthToken;
 
     if(token != null) {
       headers['Authorization'] = "Bearer $token";
     }
+    headers['Access-Control-Allow-Origin'] = "*";
 
-    return await get(
-        url,
-        headers: parseHeaders(headers)
-    );
+    var response = await dio.get(url,options: Options(
+      headers: headers,
+    ));
+    return response.data.toString();
   }
 
-  static Future<Response> postData(String path, Map<String, dynamic> headers, Object body) async {
+  Future<String> postData(String path, Map<String, dynamic> headers, Map<String, dynamic> body) async {
     final url = await buildUrl(path);
     final token = Tokens().oauthToken;
 
     if(token != null) {
       headers['Authorization'] = "Bearer $token";
     }
+    headers['Access-Control-Allow-Origin'] = '*';
 
-    headers['Content-Type'] = 'application/json'; // Ensure JSON content type
-    return await post(
-        url,
-        headers: parseHeaders(headers),
-        body: jsonEncode(body)
+    var response = await dio.post(
+      url,
+      data: body,
+      options: Options(
+        headers: headers,
+      )
     );
+    return response.data.toString();
   }
 }
