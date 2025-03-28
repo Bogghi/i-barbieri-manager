@@ -63,7 +63,7 @@ class BaseClientUtility {
     var response = await dio.get(url,options: Options(
       headers: headers,
     ));
-    return response.data.toString();
+    return response.toString();
   }
 
   Future<String> postData(String path, Map<String, dynamic> headers, Map<String, dynamic> body) async {
@@ -82,6 +82,6 @@ class BaseClientUtility {
         headers: headers,
       )
     );
-    return response.data.toString();
+    return response.toString();
   }
 }
