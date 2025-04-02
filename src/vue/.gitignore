@@ -1,0 +1,30 @@
+# Logs
+/src/vue/logs
+/src/vue/*.log
+/src/vue/npm-debug.log*
+/src/vue/yarn-debug.log*
+/src/vue/yarn-error.log*
+/src/vue/pnpm-debug.log*
+/src/vue/lerna-debug.log*
+
+/src/vue/node_modules
+/src/vue/.DS_Store
+/src/vue/dist
+/src/vue/dist-ssr
+/src/vue/coverage
+/src/vue/*.local
+
+/src/vue/cypress/videos/
+/src/vue/cypress/screenshots/
+
+/src/vue/# Editor directories and files
+/src/vue/.vscode/*
+/src/vue/!.vscode/extensions.json
+/src/vue/.idea
+/src/vue/*.suo
+/src/vue/*.ntvs*
+/src/vue/*.njsproj
+/src/vue/*.sln
+/src/vue/*.sw?
+
+/src/vue/*.tsbuildinfo

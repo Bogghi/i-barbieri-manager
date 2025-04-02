@@ -75,6 +75,7 @@ class BaseClientUtility {
     }
     headers['Access-Control-Allow-Origin'] = '*';
 
+    print(url);
     var response = await dio.post(
       url,
       data: body,
